@@ -4,7 +4,7 @@ from datetime import datetime
 from collections import defaultdict
 import pandas as pd
 
-### Narrative Filters ###
+# Narrative Filters
 INCLUDE_CODES = [
     re.compile(r'DEBIT CARD PURCHASE', re.IGNORECASE), # debit card purchases from checking account
     re.compile(r'EFTPOS DEBIT', re.IGNORECASE), # checking account debit transaction via Beem
