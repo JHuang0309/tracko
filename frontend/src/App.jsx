@@ -2,6 +2,9 @@ import { useState } from 'react'
 import axios from 'axios';
 import './App.css'
 
+
+import SummaryChart from './assets/SummaryChart';
+
 function App() {
     const [csvFile, setCsvFile] = useState(null);
     const [summary, setSummary] = useState(null);
@@ -29,20 +32,70 @@ function App() {
             <button onClick={handleUpload}>Upload</button>
 
             {summary && (
-                <div>
-                    <h2>Monthly Summary</h2>
-                    <ul>
-                        {Object.entries(summary.monthly).map(([month, amount]) => (
-                            <li key={month}>{month}: ${amount}</li>
-                        ))}
-                    </ul>
-                    <h2>Weekly Summary</h2>
-                    <ul>
-                        {Object.entries(summary.weekly).map(([week, amount]) => (
-                            <li key={week}>{week}: ${amount}</li>
-                        ))}
-                    </ul>
-                </div>
+                <main>
+                    <div>
+                        <h2>Expenditure Overview</h2>
+                        <SummaryChart monthly={summary.monthly} weekly={summary.weekly} />
+                    </div>
+                    <div className="my-8">
+                        {/* Monthly Summary */}
+                        <h2 className="text-xl font-semibold mb-4">Monthly Summary</h2>
+                        <div className="flex flex-wrap gap-4">
+                            {Object.entries(summary.monthly).map(([month, amount], index, arr) => {
+                                const prevAmount = arr[index + 1]?.[1] || amount; // Previous month's amount or current if it's the first month
+                                const isIncrease = amount > prevAmount;
+                                const isDecrease = amount < prevAmount;
+                                
+                                return (
+                                    <div
+                                        key={month}
+                                        className={`bg-white-100 text-blue-800 px-4 py-2 rounded shadow-sm w-48 text-sm ${isIncrease ? 'border-l-4 border-red-500' : isDecrease ? 'border-l-4 border-green-500' : ''}`}
+                                    >
+                                        <div className="font-medium">{month}</div>
+                                        <div className="text-lg font-semibold">
+                                            ${amount.toFixed(2)}
+                                            {isIncrease && <span className="text-red-500"> ↑</span>}
+                                            {isDecrease && <span className="text-green-500"> ↓</span>}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Weekly Summary */}
+                        <h2 className="text-xl font-semibold mt-10 mb-10 mb-2">Weekly Summary</h2>
+                        <div className="border border-gray-200 rounded">
+                            {/* Header Row */}
+                            <div className="flex flex-row justify-between font-semibold bg-gray-100 px-4 py-2 border-b border-gray-300">
+                                <div className="text-left">Week</div>
+                                <div className="text-right">Amount</div>
+                            </div>
+                            {/* Data Rows */}
+                            {Object.entries(summary.weekly).map(([week, amount], index, arr) => {
+                                const prevAmount = arr[index + 1]?.[1] || amount; // Previous week's amount or current if it's the latest week
+                                const isIncrease = amount > prevAmount;
+                                const isDecrease = amount < prevAmount;
+                                
+                                return (
+                                    <div 
+                                        key={week}
+                                        className={`flex flex-row justify-between px-4 py-2 border-b border-gray-300`}
+                                    >
+                                        <div className="text-left">{week}</div>
+                                        <div className="text-right">
+                                            ${amount.toFixed(2)}
+                                            {isIncrease && <span className="text-red-500"> ↑</span>}
+                                            {isDecrease && <span className="text-green-500"> ↓</span>}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+
+                    </div>
+
+                </main>
             )}
         </>
     );
