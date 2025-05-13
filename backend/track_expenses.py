@@ -1,7 +1,5 @@
-import csv
 import re
 from datetime import datetime
-from collections import defaultdict
 import pandas as pd
 
 # Narrative Filters
@@ -54,16 +52,16 @@ def process_csv(df):
     for _, row in df.iterrows():
         date = row['Date']
         narrative = row['Narrative']
-        debit = row['Debit Amount'].strip()
-        credit = row['Credit Amount'].strip()
+        debit = row['Debit Amount']
+        credit = row['Credit Amount']
 
         if not is_valid_expense(narrative):
             continue
             
         try:
             date = datetime.strptime(date, "%d/%m/%Y")
-            debit_amt = float(debit.replace(',', '')) if debit else 0.0
-            credit_amt = float(credit.replace(',', '')) if credit else 0.0
+            debit_amt = float(debit) if pd.notna(debit) else 0.0
+            credit_amt = float(credit) if pd.notna(credit) else 0.0
         except ValueError:
             continue
 
@@ -79,8 +77,15 @@ def process_csv(df):
         })
 
     processed_df = pd.DataFrame(records)
-    processed_df['Week'] = processed_df['Date'].dt.to_period('W').apply(lambda r: r.start_time)
-    processed_df['Month'] = processed_df['Date'].dt.to_period('M').astype(str)
+    
+    # Add a datetime object column for sorting
+    processed_df['WeekStart'] = processed_df['Date'].dt.to_period('W').apply(lambda r: r.start_time)
+    processed_df['MonthStart'] = processed_df['Date'].dt.to_period('M').apply(lambda r: r.start_time)
+
+    # Add formatted string columns for display
+    processed_df['Week'] = processed_df['WeekStart'].dt.strftime('%d %b %Y')
+    processed_df['Month'] = processed_df['MonthStart'].dt.strftime('%B %Y')
+
     return processed_df
 
 def summarise_expenses(df):
@@ -88,25 +93,29 @@ def summarise_expenses(df):
         print("No valid expense data found.")
         return
 
-    # Ensure datetime columns exist
-    df['Week'] = df['Date'].dt.to_period('W').apply(lambda r: r.start_time)
-    df['Month'] = df['Date'].dt.to_period('M').astype(str)
+    months = (
+        df.groupby(['MonthStart', 'Month'])['Amount']
+        .sum()
+        .sort_index(ascending=False)
+        .round(2)
+    )
 
-    monthly_totals = df.groupby('Month')['Amount'].sum().round(2)
-    weekly_totals = df.groupby('Week')['Amount'].sum().round(2)
+    weeks = (
+        df.groupby(['WeekStart', 'Week'])['Amount']
+        .sum()
+        .sort_index(ascending=False)
+        .round(2)
+    )
 
-    print("\n--- Monthly Expenses ---")
-    print(monthly_totals)
+    # Drop datetime index and keep only display strings for output
+    monthly_dict = dict(months.droplevel(0))
+    weekly_dict = dict(weeks.droplevel(0))
 
-    print("\n--- Weekly Expenses ---")
-    print(weekly_totals)
-
-
-if __name__ == "__main__":
-    file_path = input("Enter the path to your CSV file: ").strip()
-    df = process_csv(file_path)
-    summarise_expenses(df)
-    export_cleaned_expenses(df)
+    return {
+        "weekly": weekly_dict,
+        "monthly": monthly_dict,
+        "records": df.to_dict(orient="records")
+    }
 
 
 

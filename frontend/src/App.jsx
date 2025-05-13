@@ -16,6 +16,7 @@ function App() {
                 headers: {"Content-Type": "multipart/form-data"},
             });
             setSummary(response.data);
+            // console.log(response.data)
         } catch (err) {
             alert("Error uploading file");
         }
@@ -29,17 +30,17 @@ function App() {
 
             {summary && (
                 <div>
-                    <h2>Monthyl Summary</h2>
+                    <h2>Monthly Summary</h2>
                     <ul>
-                        {Object.entries(summary.monthly.map(([month, amount]) => (
+                        {Object.entries(summary.monthly).map(([month, amount]) => (
                             <li key={month}>{month}: ${amount}</li>
-                        )))}
+                        ))}
                     </ul>
                     <h2>Weekly Summary</h2>
                     <ul>
-                        {Object.entries(summary.weekly.map(([week, amount]) => (
+                        {Object.entries(summary.weekly).map(([week, amount]) => (
                             <li key={week}>{week}: ${amount}</li>
-                        )))}
+                        ))}
                     </ul>
                 </div>
             )}
