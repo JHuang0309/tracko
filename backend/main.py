@@ -2,12 +2,12 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import io
-from track_expenses import process_csv, summarise_expenses, export_cleaned_expenses
+from .track_expenses import process_csv, summarise_expenses, export_cleaned_expenses
 
 app = FastAPI()
 
 # allow frontend to connect to backend
-app.addmiddleware(
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://locahost:5173"],
     allow_credentials=True,

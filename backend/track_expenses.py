@@ -49,41 +49,39 @@ def export_cleaned_expenses(df, output_path='cleaned_expenses.csv'):
     print(f"\n✅ Cleaned expense records exported to: {output_path}")
 
 
-def process_csv(file_path):
+def process_csv(df):
     records = []
-    with open(file_path, newline='', encoding='utf-8') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            date = row['Date']
-            narrative = row['Narrative']
-            debit = row['Debit Amount'].strip()
-            credit = row['Credit Amount'].strip()
+    for _, row in df.iterrows():
+        date = row['Date']
+        narrative = row['Narrative']
+        debit = row['Debit Amount'].strip()
+        credit = row['Credit Amount'].strip()
 
-            if not is_valid_expense(narrative):
-                continue
-                
-            try:
-                date = datetime.strptime(date, "%d/%m/%Y")
-                debit_amt = float(debit.replace(',', '')) if debit else 0.0
-                credit_amt = float(credit.replace(',', '')) if credit else 0.0
-            except ValueError:
-                continue
+        if not is_valid_expense(narrative):
+            continue
+            
+        try:
+            date = datetime.strptime(date, "%d/%m/%Y")
+            debit_amt = float(debit.replace(',', '')) if debit else 0.0
+            credit_amt = float(credit.replace(',', '')) if credit else 0.0
+        except ValueError:
+            continue
 
-            # categorise narrative (remove clutter)
-            cleaned_narrative = clean_narrative(narrative)
+        # categorise narrative (remove clutter)
+        cleaned_narrative = clean_narrative(narrative)
 
-            records.append({
-                'Date': date,
-                'Category': cleaned_narrative,
-                'Debit': debit_amt,
-                'Credit': credit_amt,
-                'Amount': debit_amt if debit_amt > 0 else -credit_amt,
-            })
+        records.append({
+            'Date': date,
+            'Category': cleaned_narrative,
+            'Debit': debit_amt,
+            'Credit': credit_amt,
+            'Amount': debit_amt if debit_amt > 0 else -credit_amt,
+        })
 
-    df = pd.DataFrame(records)
-    df['Week'] = df['Date'].dt.to_period('W').apply(lambda r: r.start_time)
-    df['Month'] = df['Date'].dt.to_period('M').astype(str)
-    return df
+    processed_df = pd.DataFrame(records)
+    processed_df['Week'] = processed_df['Date'].dt.to_period('W').apply(lambda r: r.start_time)
+    processed_df['Month'] = processed_df['Date'].dt.to_period('M').astype(str)
+    return processed_df
 
 def summarise_expenses(df):
     if df.empty:
