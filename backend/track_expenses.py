@@ -11,6 +11,24 @@ INCLUDE_CODES = [
 
 REMOVE_KEYWORDS = ['DEBIT', 'CARD', 'PURCHASE', 'EFTPOS', 'CREDIT']
 
+# Define keyword-to-category mappings
+CATEGORY_KEYWORDS = {
+    "speedway": "Fuel / Transport",
+    "opal": "Fuel / Transport",
+    "dentistry": "Health / Personal Care",
+    "allans": "Health / Personal Care",
+    "woolworths": "Groceries",
+    "coles": "Groceries",
+    "parking": "Fuel / Transport",
+    "beem": "University / Societies (Beem)",
+    "tennis": "Sport / Exercise",
+    "golf": "Sport / Exercise",
+    "mcdonalds": "Food / Takeout",
+    "yo-chi": "Food / Takeout",
+    "guzman": "Food / Takeout",
+    "supermarket": "Groceries",
+}
+
 def is_valid_expense(narrative):
     narrative_upper = narrative.upper()
     return any(label.search(narrative_upper) for label in INCLUDE_CODES)
@@ -30,6 +48,24 @@ def clean_narrative(narrative):
     for word in REMOVE_KEYWORDS:
         narrative = re.sub(r'\b' + word + r'\b', '', narrative, flags=re.IGNORECASE)
     return re.sub(r'\s+', ' ', narrative).strip()
+
+def standardise_categories(df):
+    if 'Category' not in df.columns:
+        return df
+
+    def match_category(original):
+        # check for empty record
+        if pd.isna(original):
+            return original
+        # convert category value to a string
+        text = str(original).lower()
+        for keyword, mapped_category in CATEGORY_KEYWORDS.items():
+            if re.search(rf"\b{re.escape(keyword)}\b", text):
+                return mapped_category
+        return original  # return original if no keyword matched
+
+    df['Category'] = df['Category'].apply(match_category)
+    return df
 
 def process_csv(df):
     records = []
@@ -101,6 +137,8 @@ def summarise_expenses(df):
         "records": df.to_dict(orient="records")
     }
 
+
+
 def clean_data(df):
     if df.empty:
         print("No records to export.")
@@ -108,6 +146,7 @@ def clean_data(df):
 
     # Select only relevant columns
     export_df = df[['Date', 'Category', 'Amount', 'Month', 'Week']].copy()
+    export_df = standardise_categories(export_df)
 
     # Sort by Date
     export_df.sort_values(by='Date', ascending=False, inplace=True)
