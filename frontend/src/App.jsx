@@ -5,12 +5,24 @@ import './App.css'
 // JSX component imports
 import SummaryChart from './assets/SummaryChart';
 import NetIncomeChart from './assets/NetIncomeChart';
+import AvgWeeklyExpChart from './assets/AvgWeeklyExpChart';
+import TopExpensesList from './assets/TopExpensesList';
 
 function App() {
     const [csvFile, setCsvFile] = useState(null);
     const [summary, setSummary] = useState(null);
     const [weeklyIncome, setWeeklyIncome] = useState(0.0);
-    const [chartView, setChartView] = useState('summary') // 'summary' or 'netIncome'
+    const [chartView, setChartView] = useState('summary') // 'summary', 'netIncome', or 'avgWeekly'
+    const [topExpenses, setTopExpenses] = useState({});
+
+    const fetchTopExpenses = async () => {
+        try {
+            const res = await axios.get("http://localhost:8000/top_expenses_by_month");
+            setTopExpenses(res.data);
+        } catch (err) {
+            console.error("Failed to fetch top expenses", err);
+        }
+    };
 
 
     const handleUpload = async () => {
@@ -23,6 +35,7 @@ function App() {
                 headers: {"Content-Type": "multipart/form-data"},
             });
             setSummary(response.data);
+            fetchTopExpenses();
             // console.log(response.data)
         } catch (err) {
             alert("Error uploading file");
@@ -75,7 +88,7 @@ function App() {
                                     value="summary"
                                     checked={chartView == 'summary'}
                                     onChange={() => setChartView('summary')}
-                                /> Gross Expenses and Income
+                                />&nbsp;Gross Expenses and Income
                             </label>
                             <label className='ml-4'>
                                 <input
@@ -83,7 +96,15 @@ function App() {
                                     value="netIncome"
                                     checked={chartView == 'netIncome'}
                                     onChange={() => setChartView('netIncome')}
-                                /> Net Income
+                                />&nbsp;Net Income
+                            </label>
+                            <label className='ml-4'>
+                                <input
+                                    type='radio'
+                                    value="avgWeekly"
+                                    checked={chartView == 'avgWeekly'}
+                                    onChange={() => setChartView('avgWeekly')}
+                                />&nbsp;Average Weekly Expenses
                             </label>
                         </div>
                         {chartView === 'summary' && (
@@ -97,6 +118,12 @@ function App() {
                             <NetIncomeChart 
                                 weekly={summary.weekly}
                                 weeklyIncome={weeklyIncome}
+                            />
+                        )}
+                        {chartView === 'avgWeekly' && (
+                            <AvgWeeklyExpChart 
+                                weekly={summary.weekly}
+                                labels={Object.keys(summary.weekly)}
                             />
                         )}
                     </div>
@@ -158,7 +185,7 @@ function App() {
                     <button onClick={handleDownload} disabled={!csvFile}>
                         Export Expense Data
                     </button>
-
+                    <TopExpensesList data={topExpenses} />
                 </main>
             )}
         </>

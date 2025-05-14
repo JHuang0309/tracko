@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import pandas as pd
 import io
 from io import StringIO
-from track_expenses import process_csv, summarise_expenses, clean_data
+from track_expenses import process_csv, summarise_expenses, clean_data, get_top_expenses_by_month
 
 app = FastAPI()
 stored_df = None
@@ -27,7 +27,7 @@ async def upload_csv(file: UploadFile = File(...)):
 
     global stored_df
     stored_df = processed_df
-    
+
     result = summarise_expenses(processed_df)
     return result
 
@@ -45,3 +45,11 @@ def download_cleaned_csv():
     return StreamingResponse(stream, media_type="text/csv", headers={
         "Content-Disposition": "attachment; filename=cleaned_expenses.csv"
     })
+
+@app.get("/top_expenses_by_month")
+def top_expenses_by_month():
+    if stored_df is None or stored_df.empty:
+        raise HTTPException(status_code=400, detail="No data available.")
+
+    result = get_top_expenses_by_month(stored_df)
+    return result

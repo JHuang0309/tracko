@@ -54,7 +54,7 @@ function SummaryChart({ monthly, weekly, weeklyIncome }) {
         datasets: [
             {
                 type: 'bar',
-                label: 'Monthly',
+                label: 'Monthly Expenses',
                 data: monthlyData,
                 backgroundColor: 'rgba(75, 192, 192, 0.5)',
                 yAxisID: 'y',
@@ -75,7 +75,7 @@ function SummaryChart({ monthly, weekly, weeklyIncome }) {
             },
             {
                 type: 'line',
-                label: 'Weekly',
+                label: 'Weekly Expenses',
                 data: weeklyData,
                 borderColor: 'rgba(255, 99, 132, 1)',
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',

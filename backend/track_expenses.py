@@ -67,6 +67,20 @@ def standardise_categories(df):
     df['Category'] = df['Category'].apply(match_category)
     return df
 
+def get_top_expenses_by_month(df):
+    if df.empty:
+        return {}
+
+    df['Month'] = pd.to_datetime(df['Date']).dt.to_period('M').astype(str)
+    monthly_top_expenses = {}
+
+    for month, group in df.groupby('Month'):
+        top_3 = group.sort_values(by='Amount', ascending=False).head(3)
+        monthly_top_expenses[month] = top_3[['Date', 'Category', 'Amount']].to_dict(orient='records')
+
+    return monthly_top_expenses
+
+
 def process_csv(df):
     records = []
     for _, row in df.iterrows():
