@@ -14,7 +14,7 @@ function App() {
     const handleUpload = async () => {
         if (!csvFile) return;
         const formData = new FormData();
-        formData.append("file", csvFile);
+        formData.append("file", csvFile); // wrap csv file in a form object to send via HTTP
 
         try {
             const response = await axios.post("http://localhost:8000/upload", formData, {
@@ -24,6 +24,24 @@ function App() {
             // console.log(response.data)
         } catch (err) {
             alert("Error uploading file");
+        }
+    };
+
+    const handleDownload = async () => {
+        if (!csvFile) return;
+        try {
+            const response = await axios.get("http://localhost:8000/download_cleaned_csv", {
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'cleaned_expenses.csv');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (err) {
+            alert("Failed to download CSV.");
         }
     };
 
@@ -107,9 +125,10 @@ function App() {
                                 );
                             })}
                         </div>
-
-
                     </div>
+                    <button onClick={handleDownload} disabled={!csvFile}>
+                        Export Expense Data
+                    </button>
 
                 </main>
             )}

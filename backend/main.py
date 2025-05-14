@@ -1,10 +1,14 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+from fastapi import HTTPException
 import pandas as pd
 import io
-from track_expenses import process_csv, summarise_expenses, export_cleaned_expenses
+from io import StringIO
+from track_expenses import process_csv, summarise_expenses, clean_data
 
 app = FastAPI()
+stored_df = None
 
 # allow frontend to connect to backend
 app.add_middleware(
@@ -19,16 +23,25 @@ app.add_middleware(
 async def upload_csv(file: UploadFile = File(...)):
     contents = await file.read()
     df = pd.read_csv(io.BytesIO(contents))
-
     processed_df = process_csv(df)
+
+    global stored_df
+    stored_df = processed_df
+    
     result = summarise_expenses(processed_df)
     return result
 
-# @app.post("/upload")
-# async def upload_csv(file: UploadFile = File(...)):
-#     # For now, just confirm the file was received
-#     if not file:
-#         return {"error": "No file uploaded."}
+@app.get("/download_cleaned_csv")
+def download_cleaned_csv():
+    if stored_df is None or stored_df.empty:
+        raise HTTPException(status_code=400, detail="No data to export.")
     
-#     # Simulating a successful upload response
-#     return {"message": f"File '{file.filename}' uploaded successfully!"}
+    cleaned_df = clean_data(stored_df)
+    
+    stream = StringIO()
+    cleaned_df.to_csv(stream, index=False)
+    stream.seek(0)
+
+    return StreamingResponse(stream, media_type="text/csv", headers={
+        "Content-Disposition": "attachment; filename=cleaned_expenses.csv"
+    })

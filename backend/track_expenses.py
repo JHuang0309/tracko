@@ -31,22 +31,6 @@ def clean_narrative(narrative):
         narrative = re.sub(r'\b' + word + r'\b', '', narrative, flags=re.IGNORECASE)
     return re.sub(r'\s+', ' ', narrative).strip()
 
-def export_cleaned_expenses(df, output_path='cleaned_expenses.csv'):
-    if df.empty:
-        print("No records to export.")
-        return
-
-    # Select only relevant columns
-    export_df = df[['Date', 'Category', 'Amount', 'Month', 'Week']].copy()
-
-    # Sort by Date
-    export_df.sort_values(by='Date', ascending=False, inplace=True)
-
-    # Write to CSV
-    export_df.to_csv(output_path, index=False)
-    print(f"\n✅ Cleaned expense records exported to: {output_path}")
-
-
 def process_csv(df):
     records = []
     for _, row in df.iterrows():
@@ -117,6 +101,18 @@ def summarise_expenses(df):
         "records": df.to_dict(orient="records")
     }
 
+def clean_data(df):
+    if df.empty:
+        print("No records to export.")
+        return
 
+    # Select only relevant columns
+    export_df = df[['Date', 'Category', 'Amount', 'Month', 'Week']].copy()
+
+    # Sort by Date
+    export_df.sort_values(by='Date', ascending=False, inplace=True)
+
+    return export_df
+    
 
 
