@@ -14,7 +14,9 @@ function TopExpensesList({ data }) {
         <div className="p-4 bg-white shadow rounded-lg">
             <h2 className="text-xl font-bold mb-3 text-gray-800">Highest Expenses each Month</h2>
             <div className="space-y-4">
-                {Object.entries(data).map(([month, expenses]) => (
+                {Object.entries(data)
+                    .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+                    .map(([month, expenses]) => (
                     <div key={month}>
                         <h3 className="text-md font-semibold text-blue-700 text-left mb-2 border-b border-gray-100 pb-1">
                             {formatMonth(month)}
