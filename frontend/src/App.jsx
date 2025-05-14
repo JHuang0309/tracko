@@ -8,6 +8,8 @@ import SummaryChart from './assets/SummaryChart';
 function App() {
     const [csvFile, setCsvFile] = useState(null);
     const [summary, setSummary] = useState(null);
+    const [weeklyIncome, setWeeklyIncome] = useState(0.0);
+
 
     const handleUpload = async () => {
         if (!csvFile) return;
@@ -30,12 +32,26 @@ function App() {
             <h1>Tracko - Expense Tracker</h1>
             <input type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files[0])} />
             <button onClick={handleUpload}>Upload</button>
+            <div className="my-6">
+                <label className="block mb-2 font-medium text-gray-700">Weekly Income ($)</label>
+                <input
+                    type="number"
+                    // value={weeklyIncome}
+                    onChange={(e) => setWeeklyIncome(Math.max(0, Number(e.target.value)))}
+                    className="w-48 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring"
+                    placeholder="Enter amount"
+                />
+            </div>
 
             {summary && (
                 <main>
                     <div>
                         <h2>Expenditure Overview</h2>
-                        <SummaryChart monthly={summary.monthly} weekly={summary.weekly} />
+                        <SummaryChart 
+                            monthly={summary.monthly}
+                            weekly={summary.weekly}
+                            weeklyIncome={weeklyIncome}
+                        />
                     </div>
                     <div className="my-8">
                         {/* Monthly Summary */}
