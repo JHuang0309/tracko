@@ -118,18 +118,19 @@ function SummaryChart({ monthly, weekly, weeklyIncome }) {
                     display: true,
                     text: 'Months'
                 },
-                ticks: {
-                    callback: (value, index) => {
-                        const currentDate = new Date(labels[index]);
-                        const previousDate = index > 0 ? new Date(labels[index - 1]) : null;
-                        // Only show tick if the current month is different from the previous month
-                        if (previousDate && currentDate.getMonth() === previousDate.getMonth()) {
-                            return '';
-                        }
-                        return currentDate.toLocaleString('default', { month: 'long' });
-                    },
-                    autoSkip: true,
-                }
+                // X-axis is just the months
+                // ticks: {
+                //     callback: (value, index) => {
+                //         const currentDate = new Date(labels[index]);
+                //         const previousDate = index > 0 ? new Date(labels[index - 1]) : null;
+                //         // Only show tick if the current month is different from the previous month
+                //         if (previousDate && currentDate.getMonth() === previousDate.getMonth()) {
+                //             return '';
+                //         }
+                //         return currentDate.toLocaleString('default', { month: 'long' });
+                //     },
+                //     autoSkip: true,
+                // }
             },
         }
     }

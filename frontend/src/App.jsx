@@ -2,13 +2,15 @@ import { useState } from 'react'
 import axios from 'axios';
 import './App.css'
 
-
+// JSX component imports
 import SummaryChart from './assets/SummaryChart';
+import NetIncomeChart from './assets/NetIncomeChart';
 
 function App() {
     const [csvFile, setCsvFile] = useState(null);
     const [summary, setSummary] = useState(null);
     const [weeklyIncome, setWeeklyIncome] = useState(0.0);
+    const [chartView, setChartView] = useState('summary') // 'summary' or 'netIncome'
 
 
     const handleUpload = async () => {
@@ -49,7 +51,8 @@ function App() {
         <>
             <h1>Tracko - Expense Tracker</h1>
             <input type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files[0])} />
-            <button onClick={handleUpload}>Upload</button>
+            <button onClick={handleUpload}>Upload CSV</button>
+
             <div className="my-6">
                 <label className="block mb-2 font-medium text-gray-700">Weekly Income ($)</label>
                 <input
@@ -65,11 +68,37 @@ function App() {
                 <main>
                     <div>
                         <h2>Expenditure Overview</h2>
-                        <SummaryChart 
-                            monthly={summary.monthly}
-                            weekly={summary.weekly}
-                            weeklyIncome={weeklyIncome}
-                        />
+                        <div className='my-4'>
+                            <label>
+                                <input
+                                    type='radio'
+                                    value="summary"
+                                    checked={chartView == 'summary'}
+                                    onChange={() => setChartView('summary')}
+                                /> Gross Expenses and Income
+                            </label>
+                            <label className='ml-4'>
+                                <input
+                                    type='radio'
+                                    value="netIncome"
+                                    checked={chartView == 'netIncome'}
+                                    onChange={() => setChartView('netIncome')}
+                                /> Net Income
+                            </label>
+                        </div>
+                        {chartView === 'summary' && (
+                            <SummaryChart 
+                                monthly={summary.monthly}
+                                weekly={summary.weekly}
+                                weeklyIncome={weeklyIncome}
+                            />
+                        )}
+                        {chartView === 'netIncome' && (
+                            <NetIncomeChart 
+                                weekly={summary.weekly}
+                                weeklyIncome={weeklyIncome}
+                            />
+                        )}
                     </div>
                     <div className="my-8">
                         {/* Monthly Summary */}
