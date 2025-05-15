@@ -45,8 +45,9 @@ function CsvDropZone({ onFile }) {
         htmlFor="csv-upload"
         className={`cursor-pointer flex flex-col items-center justify-center
                     border border-white border-opacity-30 rounded-lg
+                    hover:ring-1 hover:ring-white hover:ring-opacity-60
                     p-12 w-full max-w-md mx-auto
-                    transition-colors duration-200
+                    transition-colors duration-300
                     ${isDragging ? 'border-opacity-80 bg-white bg-opacity-10' : 'bg-transparent'}
                     text-white`}
         onDragOver={handleDragOver}

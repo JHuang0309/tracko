@@ -76,7 +76,51 @@ function Dashboard() {
 
     return (
         <>
-        Make
+         <div className="flex min-h-screen bg-gray-100 text-black p-8">
+            <div className="max-w-7xl mx-auto grid grid-rows-2 gap-6">
+                {/* Row 1 */}
+                <div className="grid grid-cols-5 gap-4">
+                    {/* Large card taking half the row */}
+                    <div className="col-span-1 bg-white rounded-lg p-6 shadow-md">
+                        <h2 className="text-sm font-semibold">Monthly Expenditure</h2>
+                        <p className='text-xs text-gray-500'>List of months...ability to scroll through</p>
+                    </div>
+
+                    <div className="col-span-3 bg-white rounded-lg p-6 shadow-md">
+                        <h2 className="text-sm font-semibold">Big Chart</h2>
+                        <p className='text-xs text-gray-500'>Visualisations..toggle</p>
+                    </div>
+
+                    {/* Stack of smaller cards */}
+                    <div className="col-span-1 grid grid-rows-2 gap-4">
+                        <div className="bg-white rounded-lg p-4 shadow-md">
+                            <h3 className="text-sm font-medium">Upload new</h3>
+                            <p className='text-xs text-gray-500'>Smaller upload box...grey dotted lines</p>
+                        </div>
+                        <div className="bg-white rounded-lg p-4 shadow-md">
+                            <h3 className="text-sm font-medium">Income</h3>
+                            <p className='text-xs text-gray-500'>dynamic graph and input underneath...label with graph</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Row 2 */}
+                <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-white rounded-lg p-4 shadow-md">
+                        <h3 className="text-sm font-medium">Highest Transactions</h3>
+                        <p className='text-xs text-gray-500'>Table or list...</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-md">
+                        <h3 className="text-sm font-medium">Weekly breakdown</h3>
+                        <p className='text-xs text-gray-500'>List</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-md">
+                        <h3 className="text-sm font-medium">Pie chart summary</h3>
+                        <p className='text-xs text-gray-500'>Categories expenses...TODO:create miscellanous / general spending category</p>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </>
         // <>
         //     <h1>Tracko - Expense Tracker</h1>
@@ -89,7 +133,7 @@ function Dashboard() {
         //             type="number"
         //             // value={weeklyIncome}
         //             onChange={(e) => setWeeklyIncome(Math.max(0, Number(e.target.value)))}
-        //             className="w-48 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring"
+        //             className="w-48 px-3 py-2 border rounded shadow-md focus:outline-none focus:ring"
         //             placeholder="Enter amount"
         //         />
         //     </div>
@@ -156,7 +200,7 @@ function Dashboard() {
         //                         return (
         //                             <div
         //                                 key={month}
-        //                                 className={`bg-white-100 text-blue-800 px-4 py-2 rounded shadow-sm w-48 text-sm ${isIncrease ? 'border-l-4 border-red-500' : isDecrease ? 'border-l-4 border-green-500' : ''}`}
+        //                                 className={`bg-white-100 text-blue-800 px-4 py-2 rounded shadow-md w-48 text-sm ${isIncrease ? 'border-l-4 border-red-500' : isDecrease ? 'border-l-4 border-green-500' : ''}`}
         //                             >
         //                                 <div className="font-medium">{month}</div>
         //                                 <div className="text-lg font-semibold">
