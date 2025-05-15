@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, Link  } from 'react-router-dom'; 
 import '../index.css'
 
 import CsvDropZone from '../assets/CsvDropZone';
@@ -7,12 +8,15 @@ function LandingPage() {
     const [fileReady, setFileReady] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
 
+    const navigate = useNavigate();
+
     const handleFileInput = (file) => {
         setFileReady(true)
         setCsvFile(file)
     }
 
     const buttonHandle = () => {
+        navigate('/dashboard', { state: { file: csvFile } });
         // navigate to dashbord
         // on dashboard, useeffect the upload
     }
