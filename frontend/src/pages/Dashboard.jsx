@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
+import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'
 import axios from 'axios';
 import '../index.css'
 
@@ -19,6 +20,24 @@ function Dashboard() {
     const [weeklyIncome, setWeeklyIncome] = useState(0.0);
     const [chartView, setChartView] = useState('summary') // 'summary', 'netIncome', or 'avgWeekly'
     const [topExpenses, setTopExpenses] = useState({});
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [cardColor, setCardColor] = useState('bg-white'); // 'bg-white' or 'bg-neutral-700'
+    const [bgColor, setBgColor] = useState('bg-gray-100'); // 'bg-gray-100' or 'bg-neutral-800'
+    const [cardTextColor, setCardTextColor] = useState('text-black'); // 'text-white' or 'text-black'
+
+    const toggleAppearance = () => setIsDarkMode(prev => !prev)
+
+    useEffect(() => {
+        if (!isDarkMode) {
+            setCardColor('bg-white')
+            setBgColor('bg-gray-100')
+            setCardTextColor('text-black')
+        } else {
+            setCardColor('bg-neutral-700')
+            setBgColor('bg-neutral-800')
+            setCardTextColor('text-white')
+        }
+    }, [isDarkMode])
 
     useEffect(() => {
         if (csvFile) {
@@ -76,51 +95,64 @@ function Dashboard() {
 
     return (
         <>
-         <div className="flex min-h-screen bg-gray-100 text-black p-8">
-            <div className="max-w-7xl mx-auto grid grid-rows-2 gap-6">
-                {/* Row 1 */}
-                <div className="grid grid-cols-5 gap-4">
-                    {/* Large card taking half the row */}
-                    <div className="col-span-1 bg-white rounded-lg p-6 shadow-md">
-                        <h2 className="text-sm font-semibold">Monthly Expenditure</h2>
-                        <p className='text-xs text-gray-500'>List of months...ability to scroll through</p>
-                    </div>
-
-                    <div className="col-span-3 bg-white rounded-lg p-6 shadow-md">
-                        <h2 className="text-sm font-semibold">Big Chart</h2>
-                        <p className='text-xs text-gray-500'>Visualisations..toggle</p>
-                    </div>
-
-                    {/* Stack of smaller cards */}
-                    <div className="col-span-1 grid grid-rows-2 gap-4">
-                        <div className="bg-white rounded-lg p-4 shadow-md">
-                            <h3 className="text-sm font-medium">Upload new</h3>
-                            <p className='text-xs text-gray-500'>Smaller upload box...grey dotted lines</p>
-                        </div>
-                        <div className="bg-white rounded-lg p-4 shadow-md">
-                            <h3 className="text-sm font-medium">Income</h3>
-                            <p className='text-xs text-gray-500'>dynamic graph and input underneath...label with graph</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Row 2 */}
-                <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-white rounded-lg p-4 shadow-md">
-                        <h3 className="text-sm font-medium">Highest Transactions</h3>
-                        <p className='text-xs text-gray-500'>Table or list...</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 shadow-md">
-                        <h3 className="text-sm font-medium">Weekly breakdown</h3>
-                        <p className='text-xs text-gray-500'>List</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 shadow-md">
-                        <h3 className="text-sm font-medium">Pie chart summary</h3>
-                        <p className='text-xs text-gray-500'>Categories expenses...TODO:create miscellanous / general spending category</p>
-                    </div>
-                    </div>
-                </div>
+            <div className={`flex justify-end ${bgColor} p-4`}>
+            <button
+                onClick={toggleAppearance}
+                className={`w-10 h-10 flex items-center justify-center rounded-md shadow-sm ${cardColor}
+                            transition-colors duration-300 hover:shadow-md hover:ring-1 hover:ring-white`}
+                >
+                {isDarkMode ? (
+                    <MoonIcon className="w-6 h-6 text-white" />
+                ) : (
+                    <SunIcon className="w-6 h-6 text-black" />
+                )}
+                </button>
             </div>
+            <div className={`flex min-h-screen ${bgColor} ${cardTextColor} p-8 transition-colors duration-300`}>  
+                <div className="max-w-7xl mx-auto grid grid-rows-2 gap-6">
+                    {/* Row 1 */}
+                    <div className="grid grid-cols-5 gap-4">
+                        {/* Large card taking half the row */}
+                        <div className={`col-span-1 ${cardColor} rounded-lg p-6 shadow-md`}>
+                            <h2 className="text-sm font-semibold">Monthly Expenditure</h2>
+                            <p className='text-xs text-gray-500'>List of months...ability to scroll through</p>
+                        </div>
+
+                        <div className={`col-span-3 ${cardColor} rounded-lg p-6 shadow-md`}>
+                            <h2 className="text-sm font-semibold">Big Chart</h2>
+                            <p className='text-xs text-gray-500'>Visualisations..toggle</p>
+                        </div>
+
+                        {/* Stack of smaller cards */}
+                        <div className="col-span-1 grid grid-rows-2 gap-4">
+                            <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
+                                <h3 className="text-sm font-medium">Upload new</h3>
+                                <p className='text-xs text-gray-500'>Smaller upload box...grey dotted lines</p>
+                            </div>
+                            <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
+                                <h3 className="text-sm font-medium">Income</h3>
+                                <p className='text-xs text-gray-500'>dynamic graph and input underneath...label with graph</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Row 2 */}
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
+                            <h3 className="text-sm font-medium">Highest Transactions</h3>
+                            <p className='text-xs text-gray-500'>Table or list...</p>
+                        </div>
+                        <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
+                            <h3 className="text-sm font-medium">Weekly breakdown</h3>
+                            <p className='text-xs text-gray-500'>List</p>
+                        </div>
+                        <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
+                            <h3 className="text-sm font-medium">Pie chart summary</h3>
+                            <p className='text-xs text-gray-500'>Categories expenses...TODO:create miscellanous / general spending category</p>
+                        </div>
+                        </div>
+                    </div>
+            </div>        
         </>
         // <>
         //     <h1>Tracko - Expense Tracker</h1>
