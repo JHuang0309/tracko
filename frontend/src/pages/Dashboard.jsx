@@ -13,7 +13,6 @@ import TopExpensesList from '../assets/TopExpensesList';
 function Dashboard() {
     const location = useLocation();
     const input_file = location.state?.file;
-    const navigate = useNavigate();
 
     const [csvFile, setCsvFile] = useState(input_file);
     const [summary, setSummary] = useState(null);
@@ -22,7 +21,7 @@ function Dashboard() {
     const [topExpenses, setTopExpenses] = useState({});
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [cardColor, setCardColor] = useState('bg-white'); // 'bg-white' or 'bg-neutral-700'
-    const [bgColor, setBgColor] = useState('bg-gray-100'); // 'bg-gray-100' or 'bg-neutral-800'
+    const [bgColor, setBgColor] = useState('bg-gray-100'); // 'bg-gray-100' or 'bg-neutral-900'
     const [cardTextColor, setCardTextColor] = useState('text-black'); // 'text-white' or 'text-black'
 
     const toggleAppearance = () => setIsDarkMode(prev => !prev)
@@ -33,8 +32,8 @@ function Dashboard() {
             setBgColor('bg-gray-100')
             setCardTextColor('text-black')
         } else {
-            setCardColor('bg-neutral-700')
-            setBgColor('bg-neutral-800')
+            setCardColor('bg-neutral-800')
+            setBgColor('bg-neutral-900')
             setCardTextColor('text-white')
         }
     }, [isDarkMode])
@@ -95,11 +94,15 @@ function Dashboard() {
 
     return (
         <>
-            <div className={`flex justify-end ${bgColor} p-4`}>
-            <button
-                onClick={toggleAppearance}
-                className={`w-10 h-10 flex items-center justify-center rounded-md shadow-sm ${cardColor}
-                            transition-colors duration-300 hover:shadow-md hover:ring-1 hover:ring-white`}
+            <div className={`flex justify-between ${bgColor} p-4`}>
+                <div 
+                    className="flex bg-clip-text text-transparent items-center font-bold text-3xl"
+                    style={{ backgroundImage: 'linear-gradient(to right, #560bad, #7209b7, #b5179e)' }}
+                    >Tracko</div>
+                <button
+                    onClick={toggleAppearance}
+                    className={`w-10 h-10 flex items-center justify-center rounded-md shadow-sm ${cardColor}
+                                transition-colors duration-300 hover:shadow-md hover:ring-1 hover:ring-white`}
                 >
                 {isDarkMode ? (
                     <MoonIcon className="w-6 h-6 text-white" />
@@ -108,19 +111,102 @@ function Dashboard() {
                 )}
                 </button>
             </div>
-            <div className={`flex min-h-screen ${bgColor} ${cardTextColor} p-8 transition-colors duration-300`}>  
-                <div className="max-w-7xl mx-auto grid grid-rows-2 gap-6">
+            <div className={`flex min-h-screen ${bgColor} ${cardTextColor} p-4 transition-colors duration-300 pd-8`}>  
+                <div className="flex mx-auto grid grid-rows-2 gap-6">
                     {/* Row 1 */}
                     <div className="grid grid-cols-5 gap-4">
-                        {/* Large card taking half the row */}
-                        <div className={`col-span-1 ${cardColor} rounded-lg p-6 shadow-md`}>
+                        {/* Monthly expenses card */}
+                        <div className={`col-span-1 ${cardColor} rounded-lg p-6 shadow-md flex flex-col`}>
                             <h2 className="text-sm font-semibold">Monthly Expenditure</h2>
-                            <p className='text-xs text-gray-500'>List of months...ability to scroll through</p>
+                            <div className="max-h-[27rem] flex flex-col gap-4 overflow-y-auto mt-2"> 
+                                {summary?.monthly && Object.entries(summary.monthly).map(([month, amount], index, arr) => {
+                                    const prevAmount = arr[index + 1]?.[1] || amount; // Previous month's amount or current if it's the first month
+                                    const isIncrease = amount > prevAmount;
+                                    const isDecrease = amount < prevAmount;
+                                    const percentage = prevAmount !== 0 ? ((amount - prevAmount) / prevAmount) * 100 : 0;
+                                    const formattedPercentage = Math.abs(percentage).toFixed(1);
+                                    return (
+                                        <div
+                                            key={month}
+                                            className={`flex flex-col bg-white-100 px-4 py-3 rounded shadow-md text-sm`}
+                                        >
+                                            <div className="font-light">{month}</div>
+                                            <div className={`flex justify-between text-lg ${isDarkMode ? 'text-white': 'text-[#4f3af4]'} font-medium`}>
+                                                <div>
+                                                    ${amount.toFixed(2)}
+                                                </div>
+                                                <div className='flex items-center'>
+                                                    {(isIncrease || isDecrease) && (
+                                                        <span
+                                                            className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
+                                                                ${isIncrease
+                                                                    ? isDarkMode
+                                                                        ? 'bg-red-800 bg-opacity-20 text-red-400'
+                                                                        : 'bg-red-100 text-red-700'
+                                                                    : isDarkMode
+                                                                        ? 'bg-green-800 bg-opacity-20 text-green-400'
+                                                                        : 'bg-green-100 text-green-700'}`}
+                                                        >
+                                                            {isIncrease ? '↑' : '↓'} {formattedPercentage}%
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
-
+                        
+                        {/* Large chart card */}
                         <div className={`col-span-3 ${cardColor} rounded-lg p-6 shadow-md`}>
                             <h2 className="text-sm font-semibold">Big Chart</h2>
-                            <p className='text-xs text-gray-500'>Visualisations..toggle</p>
+                                <div className={`my-4 ${cardTextColor}`}>
+                                    <label>
+                                        <input
+                                            type='radio'
+                                            value="summary"
+                                            checked={chartView == 'summary'}
+                                            onChange={() => setChartView('summary')}
+                                        />&nbsp;Gross Expenses and Income
+                                    </label>
+                                    <label className='ml-4'>
+                                        <input
+                                            type='radio'
+                                            value="netIncome"
+                                            checked={chartView == 'netIncome'}
+                                            onChange={() => setChartView('netIncome')}
+                                        />&nbsp;Net Income
+                                    </label>
+                                    <label className='ml-4'>
+                                        <input
+                                            type='radio'
+                                            value="avgWeekly"
+                                            checked={chartView == 'avgWeekly'}
+                                            onChange={() => setChartView('avgWeekly')}
+                                        />&nbsp;Average Weekly Expenses
+                                    </label>
+                                </div>
+                                {chartView === 'summary' && summary?.monthly && summary?.weekly && (
+                                    <SummaryChart 
+                                        monthly={summary.monthly}
+                                        weekly={summary.weekly}
+                                        weeklyIncome={weeklyIncome}
+                                        darkMode={isDarkMode}
+                                    />
+                                )}
+                                {chartView === 'netIncome' && summary?.weekly && (
+                                    <NetIncomeChart 
+                                        weekly={summary.weekly }
+                                        weeklyIncome={weeklyIncome}
+                                    />
+                                )}
+                                {chartView === 'avgWeekly' && summary?.weekly && (
+                                    <AvgWeeklyExpChart 
+                                        weekly={summary.weekly}
+                                        labels={Object.keys(summary.weekly)}
+                                    />
+                                )}
                         </div>
 
                         {/* Stack of smaller cards */}

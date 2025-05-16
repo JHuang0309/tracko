@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -22,7 +23,17 @@ ChartJS.register(
 
 const WEEKS_PER_MONTH = 3.5
 
-function SummaryChart({ monthly, weekly, weeklyIncome }) {
+const colors = {
+    'primary1': '#7e87f6',
+    'primary2': '#f69f62',
+    'secondary1': '#70aefd',
+    'secondary2': '#fd77c9',
+    'bgSecondary1': '#e3f0fd',
+    'bgSecondary2': '#eed4da',
+}
+
+function SummaryChart({ monthly, weekly, weeklyIncome, darkMode }) {
+
     const labels = Array.from(new Set([
         ...Object.keys(monthly),
         ...Object.keys(weekly),
@@ -56,7 +67,7 @@ function SummaryChart({ monthly, weekly, weeklyIncome }) {
                 type: 'bar',
                 label: 'Monthly Expenses',
                 data: monthlyData,
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                backgroundColor: colors.primary1,
                 yAxisID: 'y',
                 order: 2,
                 barPercentage: 0.8,
@@ -66,7 +77,7 @@ function SummaryChart({ monthly, weekly, weeklyIncome }) {
                 type: 'bar',
                 label: 'Monthly Income',
                 data: monthlyIncomeData,
-                backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                backgroundColor: colors.primary2,
                 yAxisID: 'y',
                 order: 1,
                 barPercentage: 0.8,
@@ -77,8 +88,8 @@ function SummaryChart({ monthly, weekly, weeklyIncome }) {
                 type: 'line',
                 label: 'Weekly Expenses',
                 data: weeklyData,
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: colors.secondary1,
+                backgroundColor: colors.bgSecondary1,
                 yAxisID: 'y',
                 order: 1,
                 fill: false,
@@ -88,8 +99,8 @@ function SummaryChart({ monthly, weekly, weeklyIncome }) {
                 type: 'line',
                 label: 'Weekly Income',
                 data: incomeLine,
-                borderColor: 'rgba(59, 130, 246, 1)',
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                borderColor: colors.secondary2,
+                backgroundColor: colors.bgSecondary2,
                 borderWidth: 2,
                 fill: false,
                 tension: 0.4,
@@ -98,44 +109,51 @@ function SummaryChart({ monthly, weekly, weeklyIncome }) {
         ]
     };
 
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: { position: 'top' },
-            title: { display: true, text: 'Monthly vs Weekly Expenditure & Income' },
-          },
-        scales: {
-            y: {
+    const getChartOptions = (isDarkMode) => {
+        const textColor = isDarkMode ? '#ffffff' : '#1f2937';
+        return {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: {
+                  color: textColor
+                }
+              },
+              title: {
+                display: true,
+                text: 'Monthly vs Weekly Expenditure & Income',
+                color: textColor
+              },
+            },
+            scales: {
+              y: {
                 beginAtZero: true,
                 title: {
-                    display: true,
-                    text: 'Amount ($)'
-                }
-            },
-            x: {
-                type: 'category',  // Ensures the x-axis is set to 'category' type
-                title: {
-                    display: true,
-                    text: 'Months'
+                  display: true,
+                  text: 'Amount ($)',
+                  color: textColor
                 },
-                // X-axis is just the months
-                // ticks: {
-                //     callback: (value, index) => {
-                //         const currentDate = new Date(labels[index]);
-                //         const previousDate = index > 0 ? new Date(labels[index - 1]) : null;
-                //         // Only show tick if the current month is different from the previous month
-                //         if (previousDate && currentDate.getMonth() === previousDate.getMonth()) {
-                //             return '';
-                //         }
-                //         return currentDate.toLocaleString('default', { month: 'long' });
-                //     },
-                //     autoSkip: true,
-                // }
-            },
-        }
-    }
+                ticks: {
+                  color: textColor
+                }
+              },
+              x: {
+                type: 'category',
+                title: {
+                  display: true,
+                  text: 'Months',
+                  color: textColor
+                },
+                ticks: {
+                  color: textColor
+                }
+              }
+            }
+          };
+        };
 
-    return <Chart type='bar' data={data} options={options} />;
+    return <Chart type='bar' data={data} options={getChartOptions(darkMode)} />;
 }
 
 export default SummaryChart;
