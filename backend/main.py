@@ -23,9 +23,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/ping")
-async def ping():
-    return {"message": "pong"}
+@app.get("/")
+async def root():
+    return {"message": "Backend is running"}
 
 @app.post("/upload")
 async def upload_csv(file: UploadFile = File(...)):
