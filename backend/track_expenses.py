@@ -62,7 +62,7 @@ def standardise_categories(df):
         for keyword, mapped_category in CATEGORY_KEYWORDS.items():
             if re.search(rf"\b{re.escape(keyword)}\b", text):
                 return mapped_category
-        return original  # return original if no keyword matched
+        return 'General / Miscellaneous';
 
     df['Category'] = df['Category'].apply(match_category)
     return df

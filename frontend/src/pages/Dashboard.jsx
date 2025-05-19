@@ -30,6 +30,18 @@ function Dashboard() {
     const MAX_WEEKLY_INCOME = 10000
     const percentage = (weeklyIncome / MAX_WEEKLY_INCOME) * 100;
 
+    useEffect(() => {
+        const savedFileContent = localStorage.getItem('lastUploadedFileContent');
+        const savedFileName = localStorage.getItem('lastUploadedFileName');
+      
+        if (savedFileContent && savedFileName) {
+          // Convert back to a "File-like" object if needed (e.g., for parsing CSV again)
+          const restoredFile = new File([savedFileContent], savedFileName, { type: 'text/csv' });
+          setCsvFile(restoredFile);
+        }
+      }, []);
+      
+
     const toggleAppearance = () => setIsDarkMode(prev => !prev)
 
     useEffect(() => {
@@ -51,7 +63,7 @@ function Dashboard() {
             // maybe redirect back to LandingPage or show a message
             console.log('No file received');
           }
-    }, []);
+    }, [csvFile]);
 
     const fetchTopExpenses = async () => {
         try {
@@ -67,6 +79,13 @@ function Dashboard() {
         if (!csvFile) return;
         const formData = new FormData();
         formData.append("file", csvFile); // wrap csv file in a form object to send via HTTP
+        
+        localStorage.setItem('lastUploadedFileName', csvFile.name);
+        const reader = new FileReader();
+        reader.onload = () => {
+            localStorage.setItem('lastUploadedFileContent', reader.result); // base64 or raw text
+        };
+        reader.readAsText(csvFile);
 
         try {
             const response = await axios.post("http://localhost:8000/upload", formData, {
@@ -93,6 +112,7 @@ function Dashboard() {
             document.body.appendChild(link);
             link.click();
             link.remove();
+            window.URL.revokeObjectURL(url);
         } catch (err) {
             alert("Failed to download CSV.");
         }
@@ -102,7 +122,7 @@ function Dashboard() {
         <>
             <div className={`flex justify-between ${bgColor} p-4`}>
                 <div 
-                    className="flex bg-clip-text text-transparent items-center font-bold text-3xl"
+                    className="flex bg-clip-text text-transparent items-center font-bold text-4xl ml-4"
                     style={{ backgroundImage: 'linear-gradient(to right, #560bad, #7209b7, #b5179e)' }}
                     >Tracko</div>
                 <div className='flex'>
@@ -259,9 +279,48 @@ function Dashboard() {
                                     placeholder="Enter amount"
                                 />
                             </div>
-                            <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
-                                <h3 className="text-sm font-medium">Income</h3>
-                                <p className='text-xs text-gray-500'>dynamic graph and input underneath...label with graph</p>
+                            <div
+                                className={`flex flex-col ${cardColor} rounded-lg p-4 shadow-md`}
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={(e) => {
+                                e.preventDefault();
+                                const file = e.dataTransfer.files[0];
+                                if (file && file.name.endsWith('.csv')) {
+                                    setCsvFile(file);
+                                }
+                                }}
+                            >
+                                <h3 className="text-sm font-medium">Visualise another dataset</h3>
+                                <p className="text-xs text-gray-500 mb-3 mt-2">Drop a CSV file below or click to upload</p>
+
+                                <label
+                                    htmlFor="csvUpload"
+                                    className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-sm cursor-pointer transition hover:bg-blue-50 ${
+                                        isDarkMode ? 'border-gray-600 text-white hover:bg-neutral-700' : 'border-gray-300 text-gray-600'
+                                    }`}
+                                >
+                                <svg className="w-6 h-6 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Click to upload .csv</span>
+                                <input
+                                    id="csvUpload"
+                                    type="file"
+                                    accept=".csv"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file && file.name.endsWith('.csv')) {
+                                        setCsvFile(file);
+                                    }
+                                    }}
+                                />
+                                </label>
+                                {csvFile && (
+                                    <p className="mt-3 text-xs italic text-gray-500 truncate" title={csvFile.name}>
+                                    Uploaded file: <span className="font-medium">{csvFile.name}</span>
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
