@@ -1,12 +1,8 @@
-import { useState, useEffect } from 'react'
 import {
   BrowserRouter,
   Routes,
   Route,
-  Link,
-  Navigate
 } from 'react-router-dom';
-import './index.css'
 
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
