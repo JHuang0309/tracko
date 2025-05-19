@@ -18,7 +18,7 @@ app.add_middleware(
         # "http://tracko-d5f7wp9ap-jayden-huangs-projects.vercel.app"
         "*"
     ],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
