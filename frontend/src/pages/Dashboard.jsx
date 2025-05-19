@@ -14,6 +14,8 @@ import ChartDropdown from '../assets/ChartDropdown';
 import WeeklyHeatmap from '../assets/WeeklyHeatmap';
 import ExpensesPieChart from '../assets/ExpensesPieChart';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Dashboard() {
     const location = useLocation();
     const input_file = location.state?.file;
@@ -71,7 +73,7 @@ function Dashboard() {
 
     const fetchTopExpenses = async () => {
         try {
-            const res = await axios.get("http://localhost:8000/top_expenses_by_month");
+            const res = await axios.get(`${API_URL}/top_expenses_by_month`);
             setTopExpenses(res.data);
         } catch (err) {
             console.error("Failed to fetch top expenses", err);
@@ -92,7 +94,7 @@ function Dashboard() {
         reader.readAsText(csvFile);
 
         try {
-            const response = await axios.post("http://localhost:8000/upload", formData, {
+            const response = await axios.post(`${API_URL}/upload`, formData, {
                 headers: {"Content-Type": "multipart/form-data"},
             });
             setSummary(response.data);
@@ -106,7 +108,7 @@ function Dashboard() {
 
     const getPieChartData = async () => {
         try {
-            const response = await axios.get("http://localhost:8000/cleaned_expenses");
+            const response = await axios.get(`${API_URL}/cleaned_expenses`);
             const categoryTotals = {};
             response.data.forEach(record => {
                 if (record.Category && record.Amount > 0) {
@@ -128,7 +130,7 @@ function Dashboard() {
     const handleDownload = async () => {
         if (!csvFile) return;
         try {
-            const response = await axios.get("http://localhost:8000/download_cleaned_csv", {
+            const response = await axios.get(`${API_URL}/download_cleaned_csv`, {
                 responseType: 'blob',
             });
             const url = window.URL.createObjectURL(new Blob([response.data]));
