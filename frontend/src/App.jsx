@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import './index.css'
-
 import {
   BrowserRouter,
   Routes,
@@ -8,7 +6,7 @@ import {
   Link,
   Navigate
 } from 'react-router-dom';
-import './chartSetup';
+import './index.css'
 
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
