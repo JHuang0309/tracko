@@ -23,6 +23,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/ping")
+def ping():
+    return {"message": "pong"}
+
 @app.post("/upload")
 async def upload_csv(file: UploadFile = File(...)):
     contents = await file.read()
