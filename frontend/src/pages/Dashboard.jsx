@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'
+import { Download } from 'lucide-react';
 import axios from 'axios';
 import '../index.css'
 
@@ -104,17 +105,29 @@ function Dashboard() {
                     className="flex bg-clip-text text-transparent items-center font-bold text-3xl"
                     style={{ backgroundImage: 'linear-gradient(to right, #560bad, #7209b7, #b5179e)' }}
                     >Tracko</div>
-                <button
-                    onClick={toggleAppearance}
-                    className={`w-10 h-10 flex items-center justify-center rounded-md shadow-sm ${cardColor}
-                                transition-colors duration-300 hover:shadow-md hover:ring-1 hover:ring-white`}
-                >
-                {isDarkMode ? (
-                    <MoonIcon className="w-6 h-6 text-white" />
-                ) : (
-                    <SunIcon className="w-6 h-6 text-black" />
-                )}
-                </button>
+                <div className='flex'>
+                    <button 
+                        className={`flex items-center gap-2 p-2 mx-2 text-xs rounded-md shadow-sm ${cardColor} hover:shadow-md hover:ring-1 hover:ring-white disabled:opacity-50
+                                    ${isDarkMode ? 'text-white' : 'text-black'}`}
+                        onClick={handleDownload}
+                        disabled={!csvFile}
+                        >
+                        <Download className="w-4 h-4" />
+                        Export Expense Data
+                    </button>
+                    <button
+                        onClick={toggleAppearance}
+                        className={`w-10 h-10 flex items-center justify-center rounded-md shadow-sm ${cardColor}
+                                    transition-colors duration-300 hover:shadow-md hover:ring-1 hover:ring-white`}
+                    >
+                    {isDarkMode ? (
+                        <MoonIcon className="w-6 h-6 text-white" />
+                    ) : (
+                        <SunIcon className="w-6 h-6 text-black" />
+                    )}
+                    </button>
+                </div>
+                
             </div>
             <div className={`flex min-h-screen ${bgColor} ${cardTextColor} p-4 transition-colors duration-300 pd-8`}>  
                 <div className="flex mx-auto grid grid-rows-2 gap-6">
@@ -271,49 +284,6 @@ function Dashboard() {
                     </div>
             </div>        
         </>
-        // <>
-        //     <h1>Tracko - Expense Tracker</h1>
-        //     <input type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files[0])} />
-        //     <button onClick={handleUpload}>Upload CSV</button>
-        //     {summary && (
-        //         <main>
-        //                 {/* Weekly Summary */}
-        //                 <h2 className="text-xl font-semibold mt-10 mb-10 mb-2">Weekly Summary</h2>
-        //                 <div className="border border-gray-200 rounded">
-        //                     {/* Header Row */}
-        //                     <div className="flex flex-row justify-between font-semibold bg-gray-100 px-4 py-2 border-b border-gray-300">
-        //                         <div className="text-left">Week</div>
-        //                         <div className="text-right">Amount</div>
-        //                     </div>
-        //                     {/* Data Rows */}
-        //                     {Object.entries(summary.weekly).map(([week, amount], index, arr) => {
-        //                         const prevAmount = arr[index + 1]?.[1] || amount; // Previous week's amount or current if it's the latest week
-        //                         const isIncrease = amount > prevAmount;
-        //                         const isDecrease = amount < prevAmount;
-                                
-        //                         return (
-        //                             <div 
-        //                                 key={week}
-        //                                 className={`flex flex-row justify-between px-4 py-2 border-b border-gray-300`}
-        //                             >
-        //                                 <div className="text-left">{week}</div>
-        //                                 <div className="text-right">
-        //                                     ${amount.toFixed(2)}
-        //                                     {isIncrease && <span className="text-red-500"> ↑</span>}
-        //                                     {isDecrease && <span className="text-green-500"> ↓</span>}
-        //                                 </div>
-        //                             </div>
-        //                         );
-        //                     })}
-        //                 </div>
-        //             </div>
-        //             <button onClick={handleDownload} disabled={!csvFile}>
-        //                 Export Expense Data
-        //             </button>
-        //             <TopExpensesList data={topExpenses} />
-        //         </main>
-        //     )}
-        // </>
     );
 }
 
