@@ -4,7 +4,7 @@ import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-function AvgWeeklyExpChart({ weekly, labels }) {
+function AvgWeeklyExpChart({ weekly, labels, darkMode }) {
     // Group weekly expenses by month
     const monthlyGroups = {};
 
@@ -35,28 +35,54 @@ function AvgWeeklyExpChart({ weekly, labels }) {
         datasets: [{
             label: 'Average Weekly Expenses',
             data: averageData,
-            backgroundColor: 'rgba(255, 159, 64, 0.5)',
+            backgroundColor: '#f69f62',
         }]
     };
 
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: { position: 'top' },
-            title: { display: true, text: 'Average Weekly Expenses' },
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
+    const getChartOptions = (isDarkMode) => {
+        const textColor = isDarkMode ? '#ffffff' : '#1f2937';
+        return {
+            responsive: true,
+            plugins: {
+                legend: { 
+                    position: 'top',
+                    labels: {
+                        color: textColor
+                    }
+                },
+                title: { 
                     display: true,
-                    text: 'Amount ($)'
+                    text: 'Average Weekly Expenses',
+                    color: textColor
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount ($)',
+                        color: textColor
+                    },
+                    ticks: {
+                        color: textColor
+                    }
+                },
+                x: {
+                    type: 'category',
+                    // title: {
+                    //     display: true,
+                    //     text: 'Months',
+                    //     color: textColor
+                    // },
+                    ticks: {
+                        color: textColor
+                    }
                 }
             }
         }
-    };
-
-    return <Bar data={data} options={options} />;
+    }
+    return <Bar data={data} options={getChartOptions(darkMode)} />;
 }
 
 export default AvgWeeklyExpChart;

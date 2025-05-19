@@ -11,7 +11,7 @@ import React from 'react';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-function NetIncomeChart({ weekly, weeklyIncome }) {
+function NetIncomeChart({ weekly, weeklyIncome, darkMode }) {
     const labels = Object.keys(weekly).sort((a, b) => new Date(a) - new Date(b));
     const netIncome = labels.map(label => {
         return weeklyIncome -weekly[label]
@@ -24,34 +24,50 @@ function NetIncomeChart({ weekly, weeklyIncome }) {
                 label: 'Net Weekly Income',
                 data: netIncome,
                 backgroundColor: 'rgba(132, 204, 22, 0.6)',
-                borderRadius: 4,
             }
         ]
     };
 
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: { display: true },
-            title: { display: true, text: 'Net Weekly Income' }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
+    const getChartOptions = (isDarkMode) => {
+        const textColor = isDarkMode ? '#ffffff' : '#1f2937';
+        return {
+            responsive: true,
+            plugins: {
+                legend: { 
                     display: true,
-                    text: 'Amount ($)'
-                }
+                    labels: {
+                        color: textColor,
+                    }
+                },
+                title: { display: true, text: 'Net Weekly Income' }
             },
-            x: {
-                title: {
-                    display: true,
-                    text: 'Week'
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount ($)',
+                        color: textColor,
+                    },
+                    ticks: {
+                      color: textColor
+                    }
+                },
+                x: {
+                    // title: {
+                    //     display: true,
+                    //     text: 'Week',
+                    //     color: textColor
+                    // },
+                    ticks: {
+                      color: textColor
+                    }
                 }
             }
         }
-    };
-    return <Chart type="bar" data={data} options={options} />;
+    }
+
+    return <Chart type="bar" data={data} options={getChartOptions(darkMode)} />;
 }
 
 export default NetIncomeChart;

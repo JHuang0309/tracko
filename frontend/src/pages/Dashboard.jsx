@@ -9,6 +9,8 @@ import SummaryChart from '../assets/SummaryChart';
 import NetIncomeChart from '../assets/NetIncomeChart';
 import AvgWeeklyExpChart from '../assets/AvgWeeklyExpChart';
 import TopExpensesList from '../assets/TopExpensesList';
+import ChartDropdown from '../assets/ChartDropdown';
+import WeeklyHeatmap from '../assets/WeeklyHeatmap';
 
 function Dashboard() {
     const location = useLocation();
@@ -117,8 +119,8 @@ function Dashboard() {
                     <div className="grid grid-cols-5 gap-4">
                         {/* Monthly expenses card */}
                         <div className={`col-span-1 ${cardColor} rounded-lg p-6 shadow-md flex flex-col`}>
-                            <h2 className="text-sm font-semibold">Monthly Expenditure</h2>
-                            <div className="max-h-[27rem] flex flex-col gap-4 overflow-y-auto mt-2"> 
+                            <h2 className="text-sm font-medium">Monthly Expenditure</h2>
+                            <div className="max-h-[30rem] flex flex-col gap-4 overflow-y-auto mt-2"> 
                                 {summary?.monthly && Object.entries(summary.monthly).map(([month, amount], index, arr) => {
                                     const prevAmount = arr[index + 1]?.[1] || amount; // Previous month's amount or current if it's the first month
                                     const isIncrease = amount > prevAmount;
@@ -128,7 +130,7 @@ function Dashboard() {
                                     return (
                                         <div
                                             key={month}
-                                            className={`flex flex-col bg-white-100 px-4 py-3 rounded shadow-md text-sm`}
+                                            className={`flex flex-col bg-white-100 px-4 py-3 rounded shadow-md text-xs`}
                                         >
                                             <div className="font-light">{month}</div>
                                             <div className={`flex justify-between text-lg ${isDarkMode ? 'text-white': 'text-[#4f3af4]'} font-medium`}>
@@ -160,32 +162,13 @@ function Dashboard() {
                         
                         {/* Large chart card */}
                         <div className={`col-span-3 ${cardColor} rounded-lg p-6 shadow-md`}>
-                            <h2 className="text-sm font-semibold">Big Chart</h2>
-                                <div className={`my-4 ${cardTextColor}`}>
-                                    <label>
-                                        <input
-                                            type='radio'
-                                            value="summary"
-                                            checked={chartView == 'summary'}
-                                            onChange={() => setChartView('summary')}
-                                        />&nbsp;Gross Expenses and Income
-                                    </label>
-                                    <label className='ml-4'>
-                                        <input
-                                            type='radio'
-                                            value="netIncome"
-                                            checked={chartView == 'netIncome'}
-                                            onChange={() => setChartView('netIncome')}
-                                        />&nbsp;Net Income
-                                    </label>
-                                    <label className='ml-4'>
-                                        <input
-                                            type='radio'
-                                            value="avgWeekly"
-                                            checked={chartView == 'avgWeekly'}
-                                            onChange={() => setChartView('avgWeekly')}
-                                        />&nbsp;Average Weekly Expenses
-                                    </label>
+                            <h2 className="text-sm font-medium">Big Chart</h2>
+                                <div className={`flex justify-end my-4 ${cardTextColor}`}>
+                                    <ChartDropdown
+                                        chartView={chartView}
+                                        setChartView={setChartView}
+                                        isDarkMode={isDarkMode}
+                                    />
                                 </div>
                                 {chartView === 'summary' && summary?.monthly && summary?.weekly && (
                                     <SummaryChart 
@@ -199,12 +182,14 @@ function Dashboard() {
                                     <NetIncomeChart 
                                         weekly={summary.weekly }
                                         weeklyIncome={weeklyIncome}
+                                        darkMode={isDarkMode}
                                     />
                                 )}
                                 {chartView === 'avgWeekly' && summary?.weekly && (
                                     <AvgWeeklyExpChart 
                                         weekly={summary.weekly}
                                         labels={Object.keys(summary.weekly)}
+                                        darkMode={isDarkMode}
                                     />
                                 )}
                         </div>
@@ -223,14 +208,14 @@ function Dashboard() {
                     </div>
 
                     {/* Row 2 */}
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
+                    <div className="max-h-[35rem] grid grid-cols-3 gap-4">
+                        <div className={`${cardColor} rounded-lg p-4 shadow-md overflow-y-auto`}>
                             <h3 className="text-sm font-medium">Highest Transactions</h3>
-                            <p className='text-xs text-gray-500'>Table or list...</p>
+                            <TopExpensesList data={topExpenses} darkMode={isDarkMode}/>
                         </div>
-                        <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
+                        <div className={`flex flex-col ${cardColor} rounded-lg p-4 shadow-md overflow-y-auto`}>
                             <h3 className="text-sm font-medium">Weekly breakdown</h3>
-                            <p className='text-xs text-gray-500'>List</p>
+                            <WeeklyHeatmap weekly={summary?.weekly} darkMode={isDarkMode}/>
                         </div>
                         <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
                             <h3 className="text-sm font-medium">Pie chart summary</h3>
@@ -258,79 +243,6 @@ function Dashboard() {
 
         //     {summary && (
         //         <main>
-        //             <div>
-        //                 <h2>Expenditure Overview</h2>
-        //                 <div className='my-4'>
-        //                     <label>
-        //                         <input
-        //                             type='radio'
-        //                             value="summary"
-        //                             checked={chartView == 'summary'}
-        //                             onChange={() => setChartView('summary')}
-        //                         />&nbsp;Gross Expenses and Income
-        //                     </label>
-        //                     <label className='ml-4'>
-        //                         <input
-        //                             type='radio'
-        //                             value="netIncome"
-        //                             checked={chartView == 'netIncome'}
-        //                             onChange={() => setChartView('netIncome')}
-        //                         />&nbsp;Net Income
-        //                     </label>
-        //                     <label className='ml-4'>
-        //                         <input
-        //                             type='radio'
-        //                             value="avgWeekly"
-        //                             checked={chartView == 'avgWeekly'}
-        //                             onChange={() => setChartView('avgWeekly')}
-        //                         />&nbsp;Average Weekly Expenses
-        //                     </label>
-        //                 </div>
-        //                 {chartView === 'summary' && (
-        //                     <SummaryChart 
-        //                         monthly={summary.monthly}
-        //                         weekly={summary.weekly}
-        //                         weeklyIncome={weeklyIncome}
-        //                     />
-        //                 )}
-        //                 {chartView === 'netIncome' && (
-        //                     <NetIncomeChart 
-        //                         weekly={summary.weekly}
-        //                         weeklyIncome={weeklyIncome}
-        //                     />
-        //                 )}
-        //                 {chartView === 'avgWeekly' && (
-        //                     <AvgWeeklyExpChart 
-        //                         weekly={summary.weekly}
-        //                         labels={Object.keys(summary.weekly)}
-        //                     />
-        //                 )}
-        //             </div>
-        //             <div className="my-8">
-        //                 {/* Monthly Summary */}
-        //                 <h2 className="text-xl font-semibold mb-4">Monthly Summary</h2>
-        //                 <div className="flex flex-wrap gap-4">
-        //                     {Object.entries(summary.monthly).map(([month, amount], index, arr) => {
-        //                         const prevAmount = arr[index + 1]?.[1] || amount; // Previous month's amount or current if it's the first month
-        //                         const isIncrease = amount > prevAmount;
-        //                         const isDecrease = amount < prevAmount;
-                                
-        //                         return (
-        //                             <div
-        //                                 key={month}
-        //                                 className={`bg-white-100 text-blue-800 px-4 py-2 rounded shadow-md w-48 text-sm ${isIncrease ? 'border-l-4 border-red-500' : isDecrease ? 'border-l-4 border-green-500' : ''}`}
-        //                             >
-        //                                 <div className="font-medium">{month}</div>
-        //                                 <div className="text-lg font-semibold">
-        //                                     ${amount.toFixed(2)}
-        //                                     {isIncrease && <span className="text-red-500"> ↑</span>}
-        //                                     {isDecrease && <span className="text-green-500"> ↓</span>}
-        //                                 </div>
-        //                             </div>
-        //                         );
-        //                     })}
-        //                 </div>
-
         //                 {/* Weekly Summary */}
         //                 <h2 className="text-xl font-semibold mt-10 mb-10 mb-2">Weekly Summary</h2>
         //                 <div className="border border-gray-200 rounded">

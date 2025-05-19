@@ -140,11 +140,11 @@ function SummaryChart({ monthly, weekly, weeklyIncome, darkMode }) {
               },
               x: {
                 type: 'category',
-                title: {
-                  display: true,
-                  text: 'Months',
-                  color: textColor
-                },
+                // title: {
+                //   display: true,
+                //   text: 'Months',
+                //   color: textColor
+                // },
                 ticks: {
                   color: textColor
                 }
