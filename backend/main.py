@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 @app.get("/ping")
-def ping():
+async def ping():
     return {"message": "pong"}
 
 @app.post("/upload")

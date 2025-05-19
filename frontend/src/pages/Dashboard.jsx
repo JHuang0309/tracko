@@ -94,7 +94,9 @@ function Dashboard() {
         reader.readAsText(csvFile);
 
         try {
-            const pingRes = await axios.get('https://tracko-5a16.onrender.com/ping');
+            console.log('Before ping');
+            await axios.get('https://tracko-5a16.onrender.com/ping');
+            console.log('After ping');
 
             const response = await axios.post(`${API_URL}/upload`, formData, {
                 headers: {"Content-Type": "multipart/form-data"},
