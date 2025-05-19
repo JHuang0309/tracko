@@ -83,7 +83,7 @@ def get_top_expenses_by_month(df):
 
 def process_csv(df):
     records = []
-
+    
     if {'Date', 'Narrative', 'Debit Amount', 'Credit Amount'}.issubset(df.columns):
         format_type = 'westpac'
     elif {'Date', 'Description', 'Amount'}.issubset(df.columns):
