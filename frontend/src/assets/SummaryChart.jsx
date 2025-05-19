@@ -1,3 +1,30 @@
+import {
+  Chart as ChartJS,
+  LineController,
+  LineElement,
+  PointElement,
+  BarController,
+  BarElement,
+  LinearScale,
+  CategoryScale,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  LineController,
+  LineElement,
+  PointElement,
+  BarController,
+  BarElement,
+  LinearScale,
+  CategoryScale,
+  Title,
+  Tooltip,
+  Legend,
+);
+
 import { Chart } from 'react-chartjs-2';
 
 const WEEKS_PER_MONTH = 3.5
