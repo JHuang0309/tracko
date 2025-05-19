@@ -46,6 +46,14 @@ def download_cleaned_csv():
         "Content-Disposition": "attachment; filename=cleaned_expenses.csv"
     })
 
+@app.get("/cleaned_expenses")
+def get_cleaned_expenses():
+    if stored_df is None or stored_df.empty:
+        raise HTTPException(status_code=400, detail="No data to export.")
+    
+    return clean_data(stored_df).to_dict(orient="records")
+
+
 @app.get("/top_expenses_by_month")
 def top_expenses_by_month():
     if stored_df is None or stored_df.empty:

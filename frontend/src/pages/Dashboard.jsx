@@ -12,10 +12,13 @@ import AvgWeeklyExpChart from '../assets/AvgWeeklyExpChart';
 import TopExpensesList from '../assets/TopExpensesList';
 import ChartDropdown from '../assets/ChartDropdown';
 import WeeklyHeatmap from '../assets/WeeklyHeatmap';
+import ExpensesPieChart from '../assets/ExpensesPieChart';
 
 function Dashboard() {
     const location = useLocation();
     const input_file = location.state?.file;
+
+    const navigate = useNavigate();
 
     const [csvFile, setCsvFile] = useState(input_file);
     const [summary, setSummary] = useState(null);
@@ -26,8 +29,9 @@ function Dashboard() {
     const [cardColor, setCardColor] = useState('bg-white'); // 'bg-white' or 'bg-neutral-700'
     const [bgColor, setBgColor] = useState('bg-gray-100'); // 'bg-gray-100' or 'bg-neutral-900'
     const [cardTextColor, setCardTextColor] = useState('text-black'); // 'text-white' or 'text-black'
+    const [categoryData, setCategoryData] = useState([]);
 
-    const MAX_WEEKLY_INCOME = 10000
+    const MAX_WEEKLY_INCOME = 5000
     const percentage = (weeklyIncome / MAX_WEEKLY_INCOME) * 100;
 
     useEffect(() => {
@@ -93,11 +97,33 @@ function Dashboard() {
             });
             setSummary(response.data);
             fetchTopExpenses();
-            // console.log(response.data)
+            await getPieChartData()
+            
         } catch (err) {
             alert("Error uploading file");
         }
     };
+
+    const getPieChartData = async () => {
+        try {
+            const response = await axios.get("http://localhost:8000/cleaned_expenses");
+            const categoryTotals = {};
+            response.data.forEach(record => {
+                if (record.Category && record.Amount > 0) {
+                    categoryTotals[record.Category] = (categoryTotals[record.Category] || 0) + record.Amount;
+                }
+            });
+    
+            const pieData = Object.entries(categoryTotals).map(([category, total]) => ({
+                name: category,
+                value: parseFloat(total.toFixed(2)),
+            }));
+    
+            setCategoryData(pieData);
+        } catch {
+            alert("Error obtaining pie chart data");
+        }
+    }
 
     const handleDownload = async () => {
         if (!csvFile) return;
@@ -122,9 +148,10 @@ function Dashboard() {
         <>
             <div className={`flex justify-between ${bgColor} p-4`}>
                 <div 
-                    className="flex bg-clip-text text-transparent items-center font-bold text-4xl ml-4"
+                    className="flex bg-clip-text text-transparent items-center font-bold text-4xl ml-4 cursor-pointer hover:opacity-80 transition-opacity"
                     style={{ backgroundImage: 'linear-gradient(to right, #560bad, #7209b7, #b5179e)' }}
-                    >Tracko</div>
+                    onClick={() => navigate('/')}
+                >Tracko</div>
                 <div className='flex'>
                     <button 
                         className={`flex items-center gap-2 p-2 mx-2 text-xs rounded-md shadow-sm ${cardColor} hover:shadow-md hover:ring-1 hover:ring-white disabled:opacity-50
@@ -335,12 +362,12 @@ function Dashboard() {
                             <h3 className="text-sm font-medium">Weekly breakdown</h3>
                             <WeeklyHeatmap weekly={summary?.weekly} darkMode={isDarkMode}/>
                         </div>
-                        <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
-                            <h3 className="text-sm font-medium">Pie chart summary</h3>
-                            <p className='text-xs text-gray-500'>Categories expenses...TODO:create miscellanous / general spending category</p>
-                        </div>
+                        <div className={`flex flex-col ${cardColor} rounded-lg p-4 shadow-md`}>
+                            <h3 className="text-sm font-medium">Expenditure by Category</h3>
+                            <ExpensesPieChart data={categoryData} />
                         </div>
                     </div>
+                </div>
             </div>        
         </>
     );
