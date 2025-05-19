@@ -94,12 +94,8 @@ function Dashboard() {
         reader.readAsText(csvFile);
 
         try {
-            const pingRes = await fetch('https://tracko-5a16.onrender.com/ping');
-            if (!pingRes.ok) {
-                alert("Backend not reachable");
-                return;
-            }
-            
+            const pingRes = await axios.get('https://tracko-5a16.onrender.com/ping');
+
             const response = await axios.post(`${API_URL}/upload`, formData, {
                 headers: {"Content-Type": "multipart/form-data"},
             });
