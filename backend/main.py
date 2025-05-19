@@ -13,7 +13,10 @@ stored_df = None
 # allow frontend to connect to backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://tracko-ah7cq7d2v-jayden-huangs-projects.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
