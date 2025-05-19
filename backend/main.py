@@ -15,7 +15,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "tracko-nine.vercel.app"
+        "https://tracko-nine.vercel.app"
         # "*"
     ],
     allow_credentials=True,
