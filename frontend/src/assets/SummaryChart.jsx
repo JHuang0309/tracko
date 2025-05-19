@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -12,13 +11,14 @@ import {
 import { Chart } from 'react-chartjs-2';
 
 ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    LineElement,
-    PointElement,
-    Tooltip,
-    Legend
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Title,
+  Tooltip,
+  Legend
 );
 
 const WEEKS_PER_MONTH = 3.5
