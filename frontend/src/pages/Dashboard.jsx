@@ -26,6 +26,9 @@ function Dashboard() {
     const [bgColor, setBgColor] = useState('bg-gray-100'); // 'bg-gray-100' or 'bg-neutral-900'
     const [cardTextColor, setCardTextColor] = useState('text-black'); // 'text-white' or 'text-black'
 
+    const MAX_WEEKLY_INCOME = 10000
+    const percentage = (weeklyIncome / MAX_WEEKLY_INCOME) * 100;
+
     const toggleAppearance = () => setIsDarkMode(prev => !prev)
 
     useEffect(() => {
@@ -196,9 +199,52 @@ function Dashboard() {
 
                         {/* Stack of smaller cards */}
                         <div className="col-span-1 grid grid-rows-2 gap-4">
-                            <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
-                                <h3 className="text-sm font-medium">Upload new</h3>
-                                <p className='text-xs text-gray-500'>Smaller upload box...grey dotted lines</p>
+                            <div className={`flex flex-col justify-between ${cardColor} rounded-lg p-4 shadow-md`}>
+                                <h3 className="text-sm font-medium">Weekly Income</h3>
+                                <p className={`text-xs mb-4 ${isDarkMode ? 'text-white' : 'text-gray-500'}`}>
+                                    Adjust your weekly income using the slider below:
+                                </p>
+
+                                {/* Income Display */}
+                                <div
+                                    className={`text-5xl font-semibold mb-3 ${
+                                    weeklyIncome > 0 ? isDarkMode ? 'text-[#e3f0fd]' :'text-blue-600' : 'text-gray-500'
+                                    }`}
+                                >
+                                    ${weeklyIncome.toLocaleString()}
+                                </div>
+
+                                {/* Slider */}
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max={MAX_WEEKLY_INCOME}
+                                    step="50"
+                                    value={weeklyIncome}
+                                    onChange={(e) => setWeeklyIncome(Number(e.target.value))}
+                                    style={{
+                                        background: `linear-gradient(to right, #3B82F6 ${percentage}%, #E5E7EB ${percentage}%)`
+                                    }}
+                                    className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer 
+                                                [&::-webkit-slider-thumb]:appearance-none
+                                                [&::-webkit-slider-thumb]:w-4
+                                                [&::-webkit-slider-thumb]:h-4
+                                                [&::-webkit-slider-thumb]:bg-white
+                                                [&::-webkit-slider-thumb]:rounded-md
+                                                [&::-webkit-slider-thumb]:border
+                                                [&::-webkit-slider-thumb]:border-blue-400
+                                                [&::-webkit-slider-thumb]:shadow
+                                                [&::-webkit-slider-thumb]:cursor-pointer
+                                    "
+                                />
+                                <input
+                                    type="number"
+                                    // value={weeklyIncome}
+                                    onChange={(e) => setWeeklyIncome(Math.max(0, Number(e.target.value)))}
+                                    value={weeklyIncome == 0 ? "" : weeklyIncome}
+                                    className={`w-full px-3 py-2 mt-8 border rounded shadow-md focus:outline-none focus:ring ${isDarkMode ? 'bg-neutral-800' : 'bg-white'}`}
+                                    placeholder="Enter amount"
+                                />
                             </div>
                             <div className={`${cardColor} rounded-lg p-4 shadow-md`}>
                                 <h3 className="text-sm font-medium">Income</h3>
@@ -229,18 +275,6 @@ function Dashboard() {
         //     <h1>Tracko - Expense Tracker</h1>
         //     <input type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files[0])} />
         //     <button onClick={handleUpload}>Upload CSV</button>
-
-        //     <div className="my-6">
-        //         <label className="block mb-2 font-medium text-gray-700">Weekly Income ($)</label>
-        //         <input
-        //             type="number"
-        //             // value={weeklyIncome}
-        //             onChange={(e) => setWeeklyIncome(Math.max(0, Number(e.target.value)))}
-        //             className="w-48 px-3 py-2 border rounded shadow-md focus:outline-none focus:ring"
-        //             placeholder="Enter amount"
-        //         />
-        //     </div>
-
         //     {summary && (
         //         <main>
         //                 {/* Weekly Summary */}
