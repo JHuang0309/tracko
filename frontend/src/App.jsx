@@ -8,6 +8,7 @@ import {
   Link,
   Navigate
 } from 'react-router-dom';
+import './chartSetup';
 
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';

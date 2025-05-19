@@ -1,15 +1,5 @@
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Tooltip,
-    Legend
-} from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 import React from 'react';
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 function NetIncomeChart({ weekly, weeklyIncome, darkMode }) {
     const labels = Object.keys(weekly).sort((a, b) => new Date(a) - new Date(b));
