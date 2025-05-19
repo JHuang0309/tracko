@@ -14,9 +14,9 @@ stored_df = None
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        # "http://localhost:5173",
-        # "https://tracko-rl7k4dpnu-jayden-huangs-projects.vercel.app"
-        "*"
+        "http://localhost:5173",
+        "https://tracko-rl7k4dpnu-jayden-huangs-projects.vercel.app"
+        # "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
