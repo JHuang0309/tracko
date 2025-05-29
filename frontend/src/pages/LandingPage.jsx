@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link  } from 'react-router-dom'; 
-import '../index.css'
 
 import CsvDropZone from '../assets/CsvDropZone';
+import Navbar from '../assets/navbar';
 
 function LandingPage() {
     const [fileReady, setFileReady] = useState(false);
@@ -28,7 +28,10 @@ function LandingPage() {
 
     return (
         <>
-            <div className='min-h-screen bg-gradient-to-b from-neutral-900 via-background to-gray-900
+            <div className="flex min-h-screen flex-col">
+                <Navbar />
+            </div>
+            {/* <div className='min-h-screen bg-gradient-to-b from-neutral-900 via-background to-gray-900
                 flex flex-col items-center justify-center text-center px-[10rem]
             '>
                 <div className='mx-auto mx-auto max-w-4xl'>
@@ -65,7 +68,7 @@ function LandingPage() {
                       
                     )}
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }
