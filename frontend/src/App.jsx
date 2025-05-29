@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
+import './index.css'
 
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
@@ -11,7 +12,7 @@ function App() {
 
   return (
     <BrowserRouter>
-    	<main className='font-default'>
+    	<main>
         <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
