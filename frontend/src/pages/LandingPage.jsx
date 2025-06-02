@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, Link  } from 'react-router-dom'; 
+import { useNavigate  } from 'react-router-dom'; 
 
 import CsvDropZone from '../assets/CsvDropZone';
 import Navbar from '../assets/navbar';
+import Footer from '../assets/footer';
 
 function LandingPage() {
     const [fileReady, setFileReady] = useState(false);
@@ -28,10 +29,24 @@ function LandingPage() {
 
     return (
         <>
-            {/* <div className="flex min-h-screen flex-col">
+            <div className="flex min-h-screen flex-col">
                 <Navbar />
-            </div> */}
-            <div className='min-h-screen bg-gradient-to-b from-neutral-900 via-background to-gray-900
+                <div className='flex flex-col'>
+                    <section className='flex flex-col items-center text-center'>
+                    <div className='rounded-md px-3 py-1 bg-gray-100 text-sm'>Financial Management</div>
+                    <h1 className='text-5xl font-bold'>Take Control of Your Expenses Now</h1>
+                    <p className='text-xl text-gray-500'>Create a snapshot of your current financial situation to track your spending and ongoing expenses</p>
+                    </section>
+                    <section className='flex flex-col items-center text-center'>
+                        <div className='rounded-md px-3 py-1 bg-blue-600 text-sm text-white'>Features</div>
+                        <h1 className='text-5xl font-bold'>Personal Finance Tracker</h1>
+                        <p className='text-xl text-gray-500'>Take control of your finances with powerful tracking and insights tools designed for personal use.</p>
+                    </section>
+                </div>
+                <Footer />
+            </div>
+            
+            {/* <div className='min-h-screen bg-gradient-to-b from-neutral-900 via-background to-gray-900
                 flex flex-col items-center justify-center text-center px-[10rem]
             '>
                 <div className='mx-auto mx-auto max-w-4xl'>
@@ -68,7 +83,7 @@ function LandingPage() {
                       
                     )}
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }
