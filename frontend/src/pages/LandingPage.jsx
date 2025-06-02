@@ -28,10 +28,10 @@ function LandingPage() {
 
     return (
         <>
-            <div className="flex min-h-screen flex-col">
+            {/* <div className="flex min-h-screen flex-col">
                 <Navbar />
-            </div>
-            {/* <div className='min-h-screen bg-gradient-to-b from-neutral-900 via-background to-gray-900
+            </div> */}
+            <div className='min-h-screen bg-gradient-to-b from-neutral-900 via-background to-gray-900
                 flex flex-col items-center justify-center text-center px-[10rem]
             '>
                 <div className='mx-auto mx-auto max-w-4xl'>
@@ -68,7 +68,7 @@ function LandingPage() {
                       
                     )}
                 </div>
-            </div> */}
+            </div>
         </>
     );
 }
