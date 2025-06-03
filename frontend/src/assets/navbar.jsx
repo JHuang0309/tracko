@@ -32,7 +32,7 @@ export default function Navbar({ toggleTheme, isDarkMode }) {
         <div className="flex items-center">
           <span className={`text-2xl font-bold ${darkMode ? 'text-white' : ''}`}>TrackX</span>
         </div>
-        <div className={`flex items-center justify-center h-10 w-10 rounded-full ${darkMode ? 'hover:bg-neutral-700' : 'hover:bg-blue-50'} transition duration-300`}>
+        <div className={`flex items-center justify-center h-10 w-10 rounded-full ${darkMode ? 'hover:bg-neutral-700' : 'hover:bg-gray-100'} transition duration-300`}>
           <button
             onClick={toggleTheme}
             className="p-1"
