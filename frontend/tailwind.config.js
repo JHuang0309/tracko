@@ -16,6 +16,11 @@ export default {
       fontFamily: {
         default: ['Poppins', 'sans-serif'],
       },
+      screens: {
+        sm: '640px',   // default is 640px
+        md: '768px',   // default is 768px
+        lg: '1024px',  // default is 1024px
+    },
     },
   },
   plugins: [],

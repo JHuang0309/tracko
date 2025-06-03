@@ -31,18 +31,17 @@ function LandingPage() {
         <>
             <div className="flex min-h-screen flex-col">
                 <Navbar />
-                <div className='flex flex-col'>
-                    <section className='flex flex-col items-center text-center'>
-                    <div className='rounded-md px-3 py-1 bg-gray-100 text-sm'>Financial Management</div>
-                    <h1 className='text-5xl font-bold'>Take Control of Your Expenses Now</h1>
-                    <p className='text-xl text-gray-500'>Create a snapshot of your current financial situation to track your spending and ongoing expenses</p>
-                    </section>
-                    <section className='flex flex-col items-center text-center'>
-                        <div className='rounded-md px-3 py-1 bg-blue-600 text-sm text-white'>Features</div>
-                        <h1 className='text-5xl font-bold'>Personal Finance Tracker</h1>
-                        <p className='text-xl text-gray-500'>Take control of your finances with powerful tracking and insights tools designed for personal use.</p>
-                    </section>
-                </div>
+                <section className='flex flex-col items-center text-center py-20'>
+                    <div className='rounded-md px-3 py-1 bg-gray-100 text-sm mb-6'>Financial Management</div>
+                    <h1 className='text-5xl font-bold mb-6 '>Take Control of Your Expenses Now</h1>
+                    <p className='text-xl text-gray-500 w-35 mb-10'>Create a snapshot of your current financial situation to track your spending and ongoing expenses</p>
+                    <CsvDropZone onFile={(file) => handleFileInput(file)} />
+                </section>
+                <section className='flex flex-col items-center text-center py-20'>
+                    <div className='rounded-md px-3 py-1 bg-blue-600 text-sm text-white'>Features</div>
+                    <h1 className='text-5xl font-bold'>Personal Finance Tracker</h1>
+                    <p className='text-xl text-gray-500'>Take control of your finances with powerful tracking and insights tools designed for personal use.</p>
+                </section>
                 <Footer />
             </div>
             
