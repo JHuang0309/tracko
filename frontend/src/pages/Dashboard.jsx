@@ -24,14 +24,13 @@ function Dashboard() {
     const navigate = useNavigate();
 
     const [csvFile, setCsvFile] = useState(input_file);
-    const [summary, setSummary] = useState(null);
     const [weeklyIncome, setWeeklyIncome] = useState(0.0);
     const [chartView, setChartView] = useState('summary') // 'summary', 'netIncome', or 'avgWeekly'
-    const [topExpenses, setTopExpenses] = useState({});
+    
     const [isDarkMode, setIsDarkMode] = useState(false);
-    const [cardColor, setCardColor] = useState('bg-white'); // 'bg-white' or 'bg-neutral-700'
-    const [bgColor, setBgColor] = useState('bg-gray-100'); // 'bg-gray-100' or 'bg-neutral-900'
-    const [cardTextColor, setCardTextColor] = useState('text-black'); // 'text-white' or 'text-black'
+    
+    const [summary, setSummary] = useState(null);
+    const [topExpenses, setTopExpenses] = useState({});
     const [categoryData, setCategoryData] = useState([]);
 
     const MAX_WEEKLY_INCOME = 5000
@@ -67,18 +66,6 @@ function Dashboard() {
             setIsDarkMode(false);
         }
     }, []);
-
-    useEffect(() => {
-        if (!isDarkMode) {
-            setCardColor('bg-white')
-            setBgColor('bg-gray-100')
-            setCardTextColor('text-black')
-        } else {
-            setCardColor('bg-neutral-800')
-            setBgColor('bg-neutral-900')
-            setCardTextColor('text-white')
-        }
-    }, [isDarkMode])
 
     useEffect(() => {
         if (csvFile) {
@@ -167,14 +154,14 @@ function Dashboard() {
     return (
         <>
             <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode}/>
-            <div className={`flex justify-between items-center ${bgColor} p-4`}>
+            <div className={`flex justify-between items-center p-4`}>
                 <div>
                     <h2 className={`font-bold text-4xl pl-3 ${isDarkMode ? 'text-white' : ''}`}>Dashboard</h2>
                     <p className={`pl-3 mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>Overview of your spending and net revenue</p>
                 </div>
                 
                 <button 
-                    className={`flex items-center gap-2 p-2 h-10 mx-2 text-xs rounded-md shadow-sm ${cardColor} hover:shadow-md hover:ring-1 hover:ring-white disabled:opacity-50
+                    className={`flex items-center gap-2 p-2 h-10 mx-2 text-xs rounded-md border hover:bg-gray-100  disabled:opacity-50
                                 ${isDarkMode ? 'text-white' : 'text-black'}`}
                     onClick={handleDownload}
                     disabled={!csvFile}
@@ -183,12 +170,12 @@ function Dashboard() {
                     Export Expense Data
                 </button>
             </div>
-            <div className={`flex min-h-screen ${bgColor} ${cardTextColor} p-4 transition-colors duration-300 pd-8`}>  
+            <div className={`flex min-h-screen p-4 transition-colors duration-300 pd-8`}>  
                 <div className="flex mx-auto grid grid-rows-2 gap-6">
                     {/* Row 1 */}
                     <div className="grid grid-cols-5 gap-4">
                         {/* Monthly expenses card */}
-                        <div className={`col-span-1 ${cardColor} rounded-lg p-6 shadow-md flex flex-col`}>
+                        <div className={`col-span-1 rounded-lg p-6 border flex flex-col`}>
                             <h2 className="text-sm font-medium">Monthly Expenditure</h2>
                             <div className="max-h-[30rem] flex flex-col gap-4 overflow-y-auto mt-2"> 
                                 {summary?.monthly && Object.entries(summary.monthly).map(([month, amount], index, arr) => {
@@ -200,7 +187,7 @@ function Dashboard() {
                                     return (
                                         <div
                                             key={month}
-                                            className={`flex flex-col bg-white-100 px-4 py-3 rounded shadow-md text-xs`}
+                                            className={`flex flex-col bg-white-100 px-4 py-3 rounded text-xs`}
                                         >
                                             <div className="font-light">{month}</div>
                                             <div className={`flex justify-between text-lg ${isDarkMode ? 'text-white': 'text-[#4f3af4]'} font-medium`}>
@@ -231,9 +218,9 @@ function Dashboard() {
                         </div>
                         
                         {/* Large chart card */}
-                        <div className={`col-span-3 ${cardColor} rounded-lg p-6 shadow-md`}>
+                        <div className={`col-span-3 rounded-lg p-6 border`}>
                             <h2 className="text-sm font-medium">Big Chart</h2>
-                                <div className={`flex justify-end my-4 ${cardTextColor}`}>
+                                <div className={`flex justify-end my-4`}>
                                     <ChartDropdown
                                         chartView={chartView}
                                         setChartView={setChartView}
@@ -266,20 +253,45 @@ function Dashboard() {
 
                         {/* Stack of smaller cards */}
                         <div className="col-span-1 grid grid-rows-2 gap-4">
-                            <div className={`flex flex-col justify-between ${cardColor} rounded-lg p-4 shadow-md`}>
+                            <div className={`flex flex-col rounded-lg p-4 border`}>
                                 <h3 className="text-sm font-medium">Weekly Income</h3>
                                 <p className={`text-xs mb-4 ${isDarkMode ? 'text-white' : 'text-gray-500'}`}>
                                     Adjust your weekly income using the slider below:
                                 </p>
 
                                 {/* Income Display */}
-                                <div
-                                    className={`text-5xl font-semibold mb-3 ${
-                                    weeklyIncome > 0 ? isDarkMode ? 'text-[#e3f0fd]' :'text-blue-600' : 'text-gray-500'
+                                <input
+                                    type="number"
+                                    className={`text-5xl font-semibold mb-3 max-w-sm appearance-none outline-none focus:outline-none focus:ring-0 focus:ring-offset-0 hover:ring-0 hover:ring-offset-0 border-0 bg-transparent ${
+                                        weeklyIncome > 0 ? (isDarkMode ? 'text-[#e3f0fd]' : 'text-blue-600') : 'text-gray-500'
                                     }`}
-                                >
-                                    ${weeklyIncome.toLocaleString()}
-                                </div>
+                                    value={weeklyIncome === 0 ? '' : weeklyIncome}
+                                    placeholder="0"
+                                    min={0}
+                                    onChange={e => {
+                                        const val = e.target.value;
+                                        setWeeklyIncome(val === '' ? 0 : Math.max(0, Number(val)));
+                                    }}
+                                    style={{
+                                        boxShadow: 'none',
+                                        MozBoxShadow: 'none',
+                                        WebkitBoxShadow: 'none',
+                                        outline: 'none',
+                                        border: 'none',
+                                        background: 'transparent',
+                                        // Remove number input arrows
+                                        MozAppearance: 'textfield',
+                                    }}
+                                    // Remove number input arrows for Chrome/Safari
+                                    onWheel={e => e.target.blur()}
+                                />
+                                <style>{`
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+`}</style>
 
                                 {/* Slider */}
                                 <input
@@ -304,17 +316,17 @@ function Dashboard() {
                                                 [&::-webkit-slider-thumb]:cursor-pointer
                                     "
                                 />
-                                <input
+                                {/* <input
                                     type="number"
                                     // value={weeklyIncome}
                                     onChange={(e) => setWeeklyIncome(Math.max(0, Number(e.target.value)))}
                                     value={weeklyIncome == 0 ? "" : weeklyIncome}
                                     className={`w-full px-3 py-2 mt-8 border rounded shadow-md focus:outline-none focus:ring ${isDarkMode ? 'bg-neutral-800' : 'bg-white'}`}
                                     placeholder="Enter amount"
-                                />
+                                /> */}
                             </div>
                             <div
-                                className={`flex flex-col ${cardColor} rounded-lg p-4 shadow-md`}
+                                className={`flex flex-col rounded-lg p-4 border`}
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => {
                                 e.preventDefault();
@@ -329,7 +341,7 @@ function Dashboard() {
 
                                 <label
                                     htmlFor="csvUpload"
-                                    className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-sm cursor-pointer transition hover:bg-blue-50 ${
+                                    className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-sm cursor-pointer transition hover:bg-gray-100 ${
                                         isDarkMode ? 'border-gray-600 text-white hover:bg-neutral-700' : 'border-gray-300 text-gray-600'
                                     }`}
                                 >
@@ -361,17 +373,17 @@ function Dashboard() {
 
                     {/* Row 2 */}
                     <div className="max-h-[35rem] grid grid-cols-3 gap-4">
-                        <div className={`${cardColor} rounded-lg p-4 shadow-md overflow-y-auto`}>
+                        <div className={`rounded-lg p-4 border overflow-y-auto`}>
                             <h3 className="text-sm font-medium">Highest Transactions</h3>
-                            <TopExpensesList data={topExpenses} darkMode={isDarkMode}/>
+                            {/* <TopExpensesList data={topExpenses} darkMode={isDarkMode}/> */}
                         </div>
-                        <div className={`flex flex-col ${cardColor} rounded-lg p-4 shadow-md overflow-y-auto`}>
+                        <div className={`flex flex-col rounded-lg p-4 border overflow-y-auto`}>
                             <h3 className="text-sm font-medium">Weekly breakdown</h3>
-                            <WeeklyHeatmap weekly={summary?.weekly} darkMode={isDarkMode}/>
+                            {/* <WeeklyHeatmap weekly={summary?.weekly} darkMode={isDarkMode}/> */}
                         </div>
-                        <div className={`flex flex-col ${cardColor} rounded-lg p-4 shadow-md`}>
+                        <div className={`flex flex-col rounded-lg p-4 border`}>
                             <h3 className="text-sm font-medium">Expenditure by Category</h3>
-                            <ExpensesPieChart data={categoryData} />
+                            {/* <ExpensesPieChart data={categoryData} /> */}
                         </div>
                     </div>
                 </div>

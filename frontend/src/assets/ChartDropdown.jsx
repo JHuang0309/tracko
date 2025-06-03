@@ -14,8 +14,8 @@ function ChartDropdown({ chartView, setChartView, isDarkMode }) {
         <div className="relative">
           <Listbox.Button
             className={`
-              relative w-full cursor-default rounded-lg py-2 pl-3 pr-10 text-left text-xs 
-              border border-gray-500 shadow-sm 
+              relative w-full cursor-pointer rounded-md py-2 pl-3 pr-10 text-left text-xs 
+              border border-gray-100 shadow-sm hover:bg-gray-100
               min-w-[19em]
               ${isDarkMode ? 'bg-neutral-800 text-white' : 'bg-white text-black'}
             `}

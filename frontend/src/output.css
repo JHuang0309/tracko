@@ -825,7 +825,11 @@ video {
 }
 
 .max-w-md {
-  max-width: 28rem;
+  max-width: 28em;
+}
+
+.max-w-sm {
+  max-width: 4em;
 }
 
 .border-collapse {
