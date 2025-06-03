@@ -1,20 +1,25 @@
+import { useEffect, useState } from 'react';
 import { Link  } from 'react-router-dom'; 
-export default function Footer() {
+export default function Footer({ isDarkMode }) {
+  const [darkMode, setDarkMode] = useState(isDarkMode);
+  useEffect(() => {
+    setDarkMode(isDarkMode);
+  }, [isDarkMode]);
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bottom-0 w-full border-t py-12">
+    <footer className={`bottom-0 w-full border-t py-12 ${darkMode ? 'border-gray-600 bg-dark-blue' : 'border-gray-200 bg-white'}`}>
       <div className="container px-4 md:px-6">
         <div className="grid grid-cols-4 gap-6 pb-6">
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-neutral-900">TrackX Platform</h3>
+            <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-neutral-900'}`}>TrackX Platform</h3>
             <p className="text-xs text-gray-500">
               Take control of your personal finances with intelligent expense tracking, budgeting tools, and
               personalized insights to help you achieve your financial goals.
             </p>
           </div>
           <div className="space-y-4">
-            <h3 className="text-xs font-bold text-neutral-900">Product</h3>
+            <h3 className={`text-xs font-bold ${darkMode ? 'text-white' : 'text-neutral-900'}`}>Product</h3>
             <nav aria-label="Product Navigation">
               <ul className="space-y-1 text-xs">
                 <li>
@@ -33,7 +38,7 @@ export default function Footer() {
             </nav>
           </div>
           <div className="space-y-4">
-            <h3 className="text-xs font-bold text-neutral-900">Resources</h3>
+            <h3 className={`text-xs font-bold ${darkMode ? 'text-white' : 'text-neutral-900'}`}>Resources</h3>
             <nav aria-label="Resources Navigation">
               <ul className="space-y-1 text-xs">
                 <li>
@@ -52,7 +57,7 @@ export default function Footer() {
             </nav>
           </div>
           <div className="space-y-4">
-            <h3 className="text-xs font-bold text-neutral-900">Company</h3>
+            <h3 className={`text-xs font-bold ${darkMode ? 'text-white' : 'text-neutral-900'}`}>Company</h3>
             <nav aria-label="Company Navigation">
               <ul className="space-y-1 text-xs">
                 <li>
@@ -71,9 +76,10 @@ export default function Footer() {
             </nav>
           </div>
         </div>
-        <div className="mt-12 pt-6 border-t flex flex-row justify-between items-center gap-4">
+        <div className={`mt-12 pt-6 border-t flex flex-row justify-between items-center gap-4 ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
           <p className="text-xs text-gray-500">© {currentYear} TrackX. All rights reserved.</p>
           <div className="flex gap-4">
+            {/* Social links */}
             <a
               href="https://linkedin.com"
               className="text-gray-500 hover:text-neutral-700 rounded p-2"

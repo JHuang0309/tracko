@@ -8,6 +8,7 @@ import Footer from '../assets/footer';
 function LandingPage() {
     const [fileReady, setFileReady] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
+    const [isDarkMode, setIsDarkMode] = useState(false)
 
     const navigate = useNavigate();
 
@@ -18,9 +19,28 @@ function LandingPage() {
 
     const buttonHandle = () => {
         navigate('/dashboard', { state: { file: csvFile } });
-        // navigate to dashbord
-        // on dashboard, useeffect the upload
     }
+
+    // Toggle theme and update localStorage and document class
+    const toggleTheme = () => {
+        const theme = !isDarkMode;
+        setIsDarkMode(theme);
+        if (theme) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    // On mount, set theme from localStorage and apply to document
+    useEffect(() => {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            setIsDarkMode(true);
+        } else {
+            setIsDarkMode(false);
+        }
+    }, []);
 
     useEffect(() => {
         localStorage.removeItem('lastUploadedFileContent');
@@ -29,20 +49,20 @@ function LandingPage() {
 
     return (
         <>
-            <div className="flex min-h-screen flex-col">
-                <Navbar />
-                <section className='flex flex-col items-center text-center py-20'>
-                    <div className='rounded-md px-3 py-1 bg-gray-100 text-sm mb-6'>Financial Management</div>
-                    <h1 className='text-5xl font-bold mb-6 '>Take Control of Your Expenses Now</h1>
-                    <p className='text-xl text-gray-500 w-35 mb-10'>Create a snapshot of your current financial situation to track your spending and ongoing expenses</p>
-                    <CsvDropZone onFile={(file) => handleFileInput(file)} />
+            <div className={`flex min-h-screen flex-col ${isDarkMode ? 'bg-dark-blue' : 'bg-white'}`}>
+                <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode}/>
+                <section className={`flex flex-col items-center text-center py-18 bg-gradient-radial ${isDarkMode ? 'from-dark-blue-900 via-dark-blue-800 to-dark-blue-700' : 'from-blue-400/40 via-blue-200/30 to-white/80'} gradient-center-top`}>
+                    <div className={`rounded-md px-3 py-1 text-sm mb-6 bg-opacity-60 ${isDarkMode ? 'text-white bg-neutral-700' : 'text-gray-900 bg-blue-100'}`}>Financial Management</div>
+                    <h1 className={`text-5xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Take Control of Your Expenses Now</h1>
+                    <p className={`text-xl ${isDarkMode ? 'text-blue-200' : 'text-gray-500'} w-35 mb-10`}>Create a snapshot of your current financial situation to track your spending and ongoing expenses</p>
+                    <CsvDropZone onFile={(file) => handleFileInput(file)} buttonHandle={buttonHandle} isDarkMode={isDarkMode}/>
                 </section>
-                <section className='flex flex-col items-center text-center py-20'>
+                {/* <section className='flex flex-col items-center text-center py-20'>
                     <div className='rounded-md px-3 py-1 bg-blue-600 text-sm text-white'>Features</div>
                     <h1 className='text-5xl font-bold'>Personal Finance Tracker</h1>
                     <p className='text-xl text-gray-500'>Take control of your finances with powerful tracking and insights tools designed for personal use.</p>
-                </section>
-                <Footer />
+                </section> */}
+                <Footer isDarkMode={isDarkMode}/>
             </div>
             
             {/* <div className='min-h-screen bg-gradient-to-b from-neutral-900 via-background to-gray-900
