@@ -13,6 +13,7 @@ import TopExpensesList from '../assets/TopExpensesList';
 import ChartDropdown from '../assets/ChartDropdown';
 import WeeklyHeatmap from '../assets/WeeklyHeatmap';
 import ExpensesPieChart from '../assets/ExpensesPieChart';
+import Navbar from '../assets/navbar';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -48,7 +49,24 @@ function Dashboard() {
       }, []);
       
 
-    const toggleAppearance = () => setIsDarkMode(prev => !prev)
+    const toggleTheme = () => {
+        const theme = !isDarkMode;
+        setIsDarkMode(theme);
+        if (theme) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    useEffect(() => {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            setIsDarkMode(true);
+        } else {
+            setIsDarkMode(false);
+        }
+    }, []);
 
     useEffect(() => {
         if (!isDarkMode) {
@@ -148,35 +166,22 @@ function Dashboard() {
 
     return (
         <>
-            <div className={`flex justify-between ${bgColor} p-4`}>
-                <div 
-                    className="flex bg-clip-text text-transparent items-center font-bold text-4xl ml-4 cursor-pointer hover:opacity-80 transition-opacity"
-                    style={{ backgroundImage: 'linear-gradient(to right, #560bad, #7209b7, #b5179e)' }}
-                    onClick={() => navigate('/')}
-                >Tracko</div>
-                <div className='flex'>
-                    <button 
-                        className={`flex items-center gap-2 p-2 mx-2 text-xs rounded-md shadow-sm ${cardColor} hover:shadow-md hover:ring-1 hover:ring-white disabled:opacity-50
-                                    ${isDarkMode ? 'text-white' : 'text-black'}`}
-                        onClick={handleDownload}
-                        disabled={!csvFile}
-                        >
-                        <Download className="w-4 h-4" />
-                        Export Expense Data
-                    </button>
-                    <button
-                        onClick={toggleAppearance}
-                        className={`w-10 h-10 flex items-center justify-center rounded-md shadow-sm ${cardColor}
-                                    transition-colors duration-300 hover:shadow-md hover:ring-1 hover:ring-white`}
-                    >
-                    {isDarkMode ? (
-                        <MoonIcon className="w-6 h-6 text-white" />
-                    ) : (
-                        <SunIcon className="w-6 h-6 text-black" />
-                    )}
-                    </button>
+            <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode}/>
+            <div className={`flex justify-between items-center ${bgColor} p-4`}>
+                <div>
+                    <h2 className={`font-bold text-4xl pl-3 ${isDarkMode ? 'text-white' : ''}`}>Dashboard</h2>
+                    <p className={`pl-3 mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>Overview of your spending and net revenue</p>
                 </div>
                 
+                <button 
+                    className={`flex items-center gap-2 p-2 h-10 mx-2 text-xs rounded-md shadow-sm ${cardColor} hover:shadow-md hover:ring-1 hover:ring-white disabled:opacity-50
+                                ${isDarkMode ? 'text-white' : 'text-black'}`}
+                    onClick={handleDownload}
+                    disabled={!csvFile}
+                    >
+                    <Download className="w-4 h-4" />
+                    Export Expense Data
+                </button>
             </div>
             <div className={`flex min-h-screen ${bgColor} ${cardTextColor} p-4 transition-colors duration-300 pd-8`}>  
                 <div className="flex mx-auto grid grid-rows-2 gap-6">
