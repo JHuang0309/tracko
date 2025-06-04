@@ -31,8 +31,29 @@ function Dashboard() {
     const [isDarkMode, setIsDarkMode] = useState(false);
     
     const [summary, setSummary] = useState(null);
+    // summary data structure
+    // {
+    //     weekly: {
+    //         05 May 2025: 374.46,
+    //         ...
+    //     }
+    //     monthly: {
+    //         April 2025: 1018.71,
+    //         ...
+    //     }
+    //     records: [
+            // {
+            //     Date: "2025-05-19T00:00:00",
+            //     Category: "Beem Debit",
+            //     Amount: 9,
+            //     Month: "May 2025",
+            // },
+    //         ...
+    //     ]
+    // }
     const [topExpenses, setTopExpenses] = useState({});
     const [categoryData, setCategoryData] = useState([]);
+    const [expByMonth, setExpByMonth] = useState({});
 
     const MAX_WEEKLY_INCOME = 5000
     const percentage = (weeklyIncome / MAX_WEEKLY_INCOME) * 100;
@@ -48,17 +69,6 @@ function Dashboard() {
           setCsvFile(restoredFile);
         }
       }, []);
-      
-
-    const toggleTheme = () => {
-        const theme = !isDarkMode;
-        setIsDarkMode(theme);
-        if (theme) {
-            localStorage.setItem('theme', 'dark');
-        } else {
-            localStorage.setItem('theme', 'light');
-        }
-    }
 
     useEffect(() => {
         const theme = localStorage.getItem('theme');
@@ -78,6 +88,16 @@ function Dashboard() {
           }
     }, [csvFile]);
 
+    const toggleTheme = () => {
+        const theme = !isDarkMode;
+        setIsDarkMode(theme);
+        if (theme) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
     const fetchTopExpenses = async () => {
         try {
             const res = await axios.get(`${API_URL}/top_expenses_by_month`);
@@ -86,6 +106,47 @@ function Dashboard() {
             console.error("Failed to fetch top expenses", err);
         }
     };
+
+    const fetchExpensesByMonth = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/cleaned_expenses`);
+            const arr = response.data;
+            const months = [...new Set(arr.map(item => item.Month))];
+            const result = {};
+            months.forEach(month => {
+                const monthExpenses = arr.filter(item => item.Month === month && item.Amount > 0);
+                const numExpenses = monthExpenses.length;
+                const total = monthExpenses.reduce((sum, item) => sum + item.Amount, 0);
+
+                const categoryTotals = {};
+                monthExpenses.forEach(item => {
+                    if (!categoryTotals[item.Category]) {
+                        categoryTotals[item.Category] = 0;
+                    }
+                    categoryTotals[item.Category] += item.Amount;
+                });
+                // Find top category (category with max total amount)
+                let topCategory = null;
+                let maxCategoryTotal = -Infinity;
+                for (const [category, catTotal] of Object.entries(categoryTotals)) {
+                    if (catTotal > maxCategoryTotal) {
+                        maxCategoryTotal = catTotal;
+                        topCategory = category;
+                    }
+                }
+                result[month] = {
+                    numExpenses,
+                    total,
+                    topCategory,
+                    maxCategoryTotal,
+                };
+            });
+            console.log(result);
+            return result;
+        } catch {
+            alert("Error obtaining monthly expenditure data");
+        }
+    }
 
 
     const handleUpload = async () => {
@@ -105,6 +166,7 @@ function Dashboard() {
                 headers: {"Content-Type": "multipart/form-data"},
             });
             setSummary(response.data);
+            setExpByMonth(fetchExpensesByMonth());
             fetchTopExpenses();
             await getPieChartData()
             
@@ -127,7 +189,7 @@ function Dashboard() {
                 name: category,
                 value: parseFloat(total.toFixed(2)),
             }));
-    
+
             setCategoryData(pieData);
         } catch {
             alert("Error obtaining pie chart data");
