@@ -25,6 +25,7 @@ function Dashboard() {
 
     const [csvFile, setCsvFile] = useState(input_file);
     const [weeklyIncome, setWeeklyIncome] = useState(0.0);
+    const [exTarget, setExTarget] = useState(0.0);
     const [chartView, setChartView] = useState('summary') // 'summary', 'netIncome', or 'avgWeekly'
     
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -35,6 +36,7 @@ function Dashboard() {
 
     const MAX_WEEKLY_INCOME = 5000
     const percentage = (weeklyIncome / MAX_WEEKLY_INCOME) * 100;
+    const exTargetPercentage = (exTarget / MAX_WEEKLY_INCOME) * 100;
 
     useEffect(() => {
         const savedFileContent = localStorage.getItem('lastUploadedFileContent');
@@ -252,17 +254,18 @@ function Dashboard() {
                         </div>
 
                         {/* Stack of smaller cards */}
-                        <div className="col-span-1 grid grid-rows-2 gap-4">
+                        <div className="col-span-1 grid grid-rows-3 gap-4">
+                            {/* Income input card */}
                             <div className={`flex flex-col rounded-lg p-4 border`}>
                                 <h3 className="text-sm font-medium">Weekly Income</h3>
-                                <p className={`text-xs mb-4 ${isDarkMode ? 'text-white' : 'text-gray-500'}`}>
+                                <p className={`text-xs mb-2 ${isDarkMode ? 'text-white' : 'text-gray-500'}`}>
                                     Adjust your weekly income using the slider below:
                                 </p>
 
                                 {/* Income Display */}
                                 <input
                                     type="number"
-                                    className={`text-5xl font-semibold mb-3 max-w-sm appearance-none outline-none focus:outline-none focus:ring-0 focus:ring-offset-0 hover:ring-0 hover:ring-offset-0 border-0 bg-transparent ${
+                                    className={`text-4xl font-semibold mb-3 max-w-sm appearance-none outline-none focus:outline-none focus:ring-0 focus:ring-offset-0 hover:ring-0 hover:ring-offset-0 border-0 bg-transparent ${
                                         weeklyIncome > 0 ? (isDarkMode ? 'text-[#e3f0fd]' : 'text-blue-600') : 'text-gray-500'
                                     }`}
                                     value={weeklyIncome === 0 ? '' : weeklyIncome}
@@ -292,7 +295,6 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0;
 }
 `}</style>
-
                                 {/* Slider */}
                                 <input
                                     type="range"
@@ -316,15 +318,73 @@ input[type=number]::-webkit-outer-spin-button {
                                                 [&::-webkit-slider-thumb]:cursor-pointer
                                     "
                                 />
-                                {/* <input
-                                    type="number"
-                                    // value={weeklyIncome}
-                                    onChange={(e) => setWeeklyIncome(Math.max(0, Number(e.target.value)))}
-                                    value={weeklyIncome == 0 ? "" : weeklyIncome}
-                                    className={`w-full px-3 py-2 mt-8 border rounded shadow-md focus:outline-none focus:ring ${isDarkMode ? 'bg-neutral-800' : 'bg-white'}`}
-                                    placeholder="Enter amount"
-                                /> */}
                             </div>
+                            {/* Monthly expenditure target card */}
+                            <div className={`flex flex-col rounded-lg p-4 border`}>
+                                <h3 className="text-sm font-medium">Monthly Expenditure Target</h3>
+                                <p className={`text-xs mb-2 ${isDarkMode ? 'text-white' : 'text-gray-500'}`}>
+                                    Adjust your monthly expenditure target using the slider below:
+                                </p>
+
+                                {/* Target Display */}
+                                <input
+                                    type="number"
+                                    className={`text-4xl font-semibold mb-4 max-w-sm appearance-none outline-none focus:outline-none focus:ring-0 focus:ring-offset-0 hover:ring-0 hover:ring-offset-0 border-0 bg-transparent ${
+                                        exTarget > 0 ? (isDarkMode ? 'text-[#fef3c7]' : 'text-[#f59e42]') : 'text-gray-500'
+                                    }`}
+                                    value={exTarget === 0 ? '' : exTarget}
+                                    placeholder="0"
+                                    min={0}
+                                    onChange={e => {
+                                        const val = e.target.value;
+                                        setExTarget(val === '' ? 0 : Math.max(0, Number(val)));
+                                    }}
+                                    style={{
+                                        boxShadow: 'none',
+                                        MozBoxShadow: 'none',
+                                        WebkitBoxShadow: 'none',
+                                        outline: 'none',
+                                        border: 'none',
+                                        background: 'transparent',
+                                        // Remove number input arrows
+                                        MozAppearance: 'textfield',
+                                    }}
+                                    // Remove number input arrows for Chrome/Safari
+                                    onWheel={e => e.target.blur()}
+                                />
+                                <style>{`
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+`}</style>
+
+                                {/* Ex Target Slider */}
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max={MAX_WEEKLY_INCOME}
+                                    step="50"
+                                    value={exTarget}
+                                    onChange={(e) => setExTarget(Number(e.target.value))}
+                                    style={{
+                                        background: `linear-gradient(to right, #f59e42 ${exTargetPercentage}%, #E5E7EB ${exTargetPercentage}%)`
+                                    }}
+                                    className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer 
+                                                [&::-webkit-slider-thumb]:appearance-none
+                                                [&::-webkit-slider-thumb]:w-4
+                                                [&::-webkit-slider-thumb]:h-4
+                                                [&::-webkit-slider-thumb]:bg-white
+                                                [&::-webkit-slider-thumb]:rounded-md
+                                                [&::-webkit-slider-thumb]:border
+                                                [&::-webkit-slider-thumb]:border-[#f59e42]
+                                                [&::-webkit-slider-thumb]:shadow
+                                                [&::-webkit-slider-thumb]:cursor-pointer
+                                    "
+                                />
+                            </div>
+                            {/* New csv file input card  */}
                             <div
                                 className={`flex flex-col rounded-lg p-4 border`}
                                 onDragOver={(e) => e.preventDefault()}
@@ -341,14 +401,14 @@ input[type=number]::-webkit-outer-spin-button {
 
                                 <label
                                     htmlFor="csvUpload"
-                                    className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-sm cursor-pointer transition hover:bg-gray-100 ${
+                                    className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4 text-sm cursor-pointer transition hover:bg-gray-100 ${
                                         isDarkMode ? 'border-gray-600 text-white hover:bg-neutral-700' : 'border-gray-300 text-gray-600'
                                     }`}
                                 >
-                                <svg className="w-6 h-6 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                {/* <svg className="w-6 h-4 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                                </svg>
-                                <span>Click to upload .csv</span>
+                                </svg> */}
+                                <span className='text-xs'>Click to upload .csv</span>
                                 <input
                                     id="csvUpload"
                                     type="file"
