@@ -59,10 +59,10 @@ export default function MonthlyExpList({ data, isDarkMode }) {
                                         ${isIncrease
                                             ? isDarkMode
                                                 ? 'text-red-400'
-                                                : 'text-red-700'
+                                                : 'text-[#F04C4B]'
                                             : isDarkMode
                                                 ? 'text-green-400'
-                                                : 'text-green-700'
+                                                : 'text-[#2FC65E]'
                                         }`}>
                                         {isIncrease
                                             ? <ArrowUpRight className="w-4 h-4 mr-0.5" />

@@ -1,15 +1,10 @@
 import { useState } from "react";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Utensils,
-  Car,
-  HeartPulse,
-  BookOpen,
-  Dumbbell,
-  ShoppingBag,
-  MoreHorizontal,
-  PieChart as PieChartIcon,
+    ChevronLeft,
+    ChevronRight,
+    MoreHorizontal,
+    ArrowUpRight,
+    ArrowDownLeft
 } from "lucide-react";
 
 import { categoryIcons } from "./categoryIcons";
@@ -21,7 +16,7 @@ function getCategoryIcon(category) {
   return categoryIcons[key] || { icon: MoreHorizontal, color: "text-gray-400" };
 }
 
-export default function ExpByCategoryCard({ data }) {
+export default function ExpByCategoryCard({ data, isDarkMode }) {
     // Sort months descending (latest first)
 
     // Only include months in the format "Month YYYY" (e.g., "May 2025")
@@ -100,27 +95,31 @@ export default function ExpByCategoryCard({ data }) {
                                     <div className="flex items-center gap-2 mb-2">
                                         <Icon className={`w-10 h-10 ${color} ${highlight} text-blue-500 p-2 rounded-lg`} />
                                         <div className="flex flex-col">
-                                            <span className="text-sm capitalize">
+                                            <span className="font-semibold text-md capitalize">
                                                 {cat.replace(/(^|\s)\S/g, (l) => l.toUpperCase())}
                                             </span>
                                             <p className="text-xs text-gray-500">{`${description}`}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-semibold text-sm">
+                                    <div className="flex flex-col items-end gap-2">
+                                        <span className="font-semibold text-md">
                                             ${spent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
                                         {percent !== null && (
-                                            <span
-                                                className={`flex items-center text-xs font-medium ${
-                                                    isIncrease
-                                                    ? "text-red-500"
-                                                    : isDecrease
-                                                    ? "text-green-600"
-                                                    : "text-gray-400"
-                                                }`}
-                                                >
-                                                {isIncrease ? "▲" : isDecrease ? "▼" : ""}
+                                            <span className={`flex items-center text-xs font-medium 
+                                                ${isIncrease
+                                                    ? isDecrease
+                                                        ? ''
+                                                        : isDarkMode
+                                                            ? 'text-[#F04C4B]'
+                                                            : 'text-[#F04C4B]'
+                                                    : isDarkMode
+                                                        ? 'text-[#2FC65E]'
+                                                        : 'text-[#2FC65E]'
+                                                }`}> 
+                                                {isIncrease
+                                                    ? <ArrowUpRight className="w-4 h-4 mr-0.5" />
+                                                    : <ArrowDownLeft className="w-4 h-4 mr-0.5" />}
                                                 {Math.abs(percent)}%
                                             </span>
                                         )}
