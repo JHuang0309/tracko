@@ -1,4 +1,4 @@
-import { Utensils, Car, HeartPulse, BookOpen, Dumbbell, ShoppingBag } from "lucide-react";
+import { Utensils, Car, HeartPulse, BookOpen, Smile,  Dumbbell, ShoppingBag } from "lucide-react";
 
 const categoryIcons = {
   "food & dining": {
@@ -26,7 +26,7 @@ const categoryIcons = {
     description: "Tennis, bookings"
   },
   "university (beem)": {
-    icon: BookOpen,
+    icon: Smile,
     color: "text-[#9333ea]",
     highlight: "bg-[#ede9fe]",
     darkColor: "text-[#a855f7]",

@@ -48,7 +48,7 @@ export default function MonthlyExpList({ data, isDarkMode }) {
                 return (
                     <div
                         key={month}
-                        className={`flex items-center justify-between bg-white p-2 rounded text-xs ${isDarkMode ? 'bg-dark-blue' : 'bg-white hover:bg-gray-100 duration-300'}`}
+                        className={`flex items-center justify-between bg-white p-2 rounded-md text-xs ${isDarkMode ? 'bg-dark-blue' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {/* Month, change, and details */}
                         <div className="flex flex-col flex-grow min-w-0">

@@ -78,7 +78,7 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                 <div className="flex">
                     {/* Categories */}
                     <div className="flex flex-col flex-1">
-                        <h3 className="text-base font-semibold mb-4">Spending Categories</h3>
+                        <h3 className="text-base font-semibold mb-2">Spending Categories</h3>
                         <div className="flex flex-col gap-2">
                             {allCategories.map((cat) => {
                                 const { icon: Icon, color, highlight, description } = getCategoryIcon(cat);
@@ -91,8 +91,8 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                                 const isDecrease = diff < 0;
 
                                 return (
-                                <div key={cat} className="flex justify-between items-center">
-                                    <div className="flex items-center gap-2 mb-2">
+                                <div key={cat} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md">
+                                    <div className="flex items-center gap-2">
                                         <Icon className={`w-10 h-10 ${color} ${highlight} text-blue-500 p-2 rounded-lg`} />
                                         <div className="flex flex-col">
                                             <span className="font-semibold text-md capitalize">
@@ -101,7 +101,7 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                                             <p className="text-xs text-gray-500">{`${description}`}</p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-end gap-2">
+                                    <div className="flex flex-col items-end ">
                                         <span className="font-semibold text-md">
                                             ${spent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
