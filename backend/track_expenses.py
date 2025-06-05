@@ -13,20 +13,20 @@ REMOVE_KEYWORDS = ['DEBIT', 'CARD', 'PURCHASE', 'EFTPOS', 'CREDIT']
 
 # Define keyword-to-category mappings
 CATEGORY_KEYWORDS = {
-    "speedway": "Fuel / Transport",
-    "opal": "Fuel / Transport",
-    "dentistry": "Health / Personal Care",
-    "allans": "Health / Personal Care",
-    "woolworths": "Groceries",
-    "coles": "Groceries",
-    "parking": "Fuel / Transport",
-    "beem": "University / Societies (Beem)",
-    "tennis": "Sport / Exercise",
-    "golf": "Sport / Exercise",
-    "mcdonalds": "Food / Takeout",
-    "yo-chi": "Food / Takeout",
-    "guzman": "Food / Takeout",
-    "supermarket": "Groceries",
+    "speedway": "Transportation",
+    "opal": "Transportation",
+    "dentistry": "Personal Health",
+    "allans": "Personal Health",
+    "woolworths": "Food & Dining",
+    "coles": "Food & Dining",
+    "parking": "Transportation",
+    "beem": "University (Beem)",
+    "tennis": "Leisure & Exercise",
+    "golf": "Leisure & Exercise",
+    "mcdonalds": "Food & Dining",
+    "yo-chi": "Food & Dining",
+    "guzman": "Food & Dining",
+    "supermarket": "Food & Dining",
 }
 
 def is_valid_expense(narrative):
@@ -62,7 +62,7 @@ def standardise_categories(df):
         for keyword, mapped_category in CATEGORY_KEYWORDS.items():
             if re.search(rf"\b{re.escape(keyword)}\b", text):
                 return mapped_category
-        return 'General / Miscellaneous';
+        return 'Miscellaneous';
 
     df['Category'] = df['Category'].apply(match_category)
     return df

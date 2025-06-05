@@ -11,9 +11,9 @@ import NetIncomeChart from '../assets/NetIncomeChart';
 import AvgWeeklyExpChart from '../assets/AvgWeeklyExpChart';
 import TopExpensesList from '../assets/TopExpensesList';
 import ChartDropdown from '../assets/ChartDropdown';
-import WeeklyHeatmap from '../assets/WeeklyHeatmap';
-import ExpensesPieChart from '../assets/ExpensesPieChart';
 import Navbar from '../assets/navbar';
+import MonthlyExpList from '../assets/MonthlyExpList';
+import ExpByCategoryCard from '../assets/ExpByCategoryCard';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -42,12 +42,12 @@ function Dashboard() {
     //         ...
     //     }
     //     records: [
-            // {
-            //     Date: "2025-05-19T00:00:00",
-            //     Category: "Beem Debit",
-            //     Amount: 9,
-            //     Month: "May 2025",
-            // },
+    //         {
+    //             Date: "2025-05-19T00:00:00",
+    //             Category: "Beem Debit",
+    //             Amount: 9,
+    //             Month: "May 2025",
+    //         },
     //         ...
     //     ]
     // }
@@ -139,9 +139,10 @@ function Dashboard() {
                     total,
                     topCategory,
                     maxCategoryTotal,
+                    spendingCategories: categoryTotals,
                 };
             });
-            console.log(result);
+            // console.log(result)
             return result;
         } catch {
             alert("Error obtaining monthly expenditure data");
@@ -166,7 +167,8 @@ function Dashboard() {
                 headers: {"Content-Type": "multipart/form-data"},
             });
             setSummary(response.data);
-            setExpByMonth(fetchExpensesByMonth());
+            const monthExpData = await fetchExpensesByMonth()
+            setExpByMonth(monthExpData);
             fetchTopExpenses();
             await getPieChartData()
             
@@ -237,53 +239,16 @@ function Dashboard() {
             <div className={`flex min-h-screen p-4 transition-colors duration-300 pd-8`}>  
                 <div className="flex mx-auto grid grid-rows-2 gap-6">
                     {/* Row 1 */}
-                    <div className="grid grid-cols-5 gap-4">
+                    <div className="grid grid-cols-5 gap-2">
                         {/* Monthly expenses card */}
-                        <div className={`col-span-1 rounded-lg p-6 border flex flex-col`}>
-                            <h2 className="text-sm font-medium">Monthly Expenditure</h2>
-                            <div className="max-h-[30rem] flex flex-col gap-4 overflow-y-auto mt-2"> 
-                                {summary?.monthly && Object.entries(summary.monthly).map(([month, amount], index, arr) => {
-                                    const prevAmount = arr[index + 1]?.[1] || amount; // Previous month's amount or current if it's the first month
-                                    const isIncrease = amount > prevAmount;
-                                    const isDecrease = amount < prevAmount;
-                                    const percentage = prevAmount !== 0 ? ((amount - prevAmount) / prevAmount) * 100 : 0;
-                                    const formattedPercentage = Math.abs(percentage).toFixed(1);
-                                    return (
-                                        <div
-                                            key={month}
-                                            className={`flex flex-col bg-white-100 px-4 py-3 rounded text-xs`}
-                                        >
-                                            <div className="font-light">{month}</div>
-                                            <div className={`flex justify-between text-lg ${isDarkMode ? 'text-white': 'text-[#4f3af4]'} font-medium`}>
-                                                <div>
-                                                    ${amount.toFixed(2)}
-                                                </div>
-                                                <div className='flex items-center'>
-                                                    {(isIncrease || isDecrease) && (
-                                                        <span
-                                                            className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
-                                                                ${isIncrease
-                                                                    ? isDarkMode
-                                                                        ? 'bg-red-800 bg-opacity-20 text-red-400'
-                                                                        : 'bg-red-100 text-red-700'
-                                                                    : isDarkMode
-                                                                        ? 'bg-green-800 bg-opacity-20 text-green-400'
-                                                                        : 'bg-green-100 text-green-700'}`}
-                                                        >
-                                                            {isIncrease ? '↑' : '↓'} {formattedPercentage}%
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                        <div className={`col-span-1 rounded-lg border p-4 flex flex-col`}>
+                            <h2 className="text-lg font-bold">Monthly Expenditure</h2>
+                            {Object.keys(expByMonth).length > 0 && <MonthlyExpList data={expByMonth} />}
                         </div>
                         
                         {/* Large chart card */}
-                        <div className={`col-span-3 rounded-lg p-6 border`}>
-                            <h2 className="text-sm font-medium">Big Chart</h2>
+                        <div className={`col-span-3 rounded-lg p-4 border`}>
+                            <h2 className="text-lg font-bold">Statistics</h2>
                                 <div className={`flex justify-end my-4`}>
                                     <ChartDropdown
                                         chartView={chartView}
@@ -296,6 +261,7 @@ function Dashboard() {
                                         monthly={summary.monthly}
                                         weekly={summary.weekly}
                                         weeklyIncome={weeklyIncome}
+                                        expTarget={exTarget}
                                         darkMode={isDarkMode}
                                     />
                                 )}
@@ -316,7 +282,7 @@ function Dashboard() {
                         </div>
 
                         {/* Stack of smaller cards */}
-                        <div className="col-span-1 grid grid-rows-3 gap-4">
+                        <div className="col-span-1 grid grid-rows-3 gap-2">
                             {/* Income input card */}
                             <div className={`flex flex-col rounded-lg p-4 border`}>
                                 <h3 className="text-sm font-medium">Weekly Income</h3>
@@ -495,16 +461,14 @@ input[type=number]::-webkit-outer-spin-button {
 
                     {/* Row 2 */}
                     <div className="max-h-[35rem] grid grid-cols-3 gap-4">
-                        <div className={`rounded-lg p-4 border overflow-y-auto`}>
-                            <h3 className="text-sm font-medium">Highest Transactions</h3>
-                            {/* <TopExpensesList data={topExpenses} darkMode={isDarkMode}/> */}
+                        <div className={`col-span-2 rounded-lg p-4 border`}>
+                            <h3 className="text-lg font-bold">Expenditure by Category</h3>
+                            {summary && Object.keys(summary).length > 0 && categoryData && categoryData.length > 0 && (
+                                <ExpByCategoryCard data={expByMonth} chartData={categoryData} />
+                            )}
                         </div>
-                        <div className={`flex flex-col rounded-lg p-4 border overflow-y-auto`}>
-                            <h3 className="text-sm font-medium">Weekly breakdown</h3>
-                            {/* <WeeklyHeatmap weekly={summary?.weekly} darkMode={isDarkMode}/> */}
-                        </div>
-                        <div className={`flex flex-col rounded-lg p-4 border`}>
-                            <h3 className="text-sm font-medium">Expenditure by Category</h3>
+                        <div className={`col-span-1 rounded-lg p-4 border overflow-x-auto`}>
+                            <h3 className="text-lg font-bold">Monthly Breakdown</h3>
                             {/* <ExpensesPieChart data={categoryData} /> */}
                         </div>
                     </div>

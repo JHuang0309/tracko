@@ -37,7 +37,7 @@ function ChartDropdown({ chartView, setChartView, isDarkMode }) {
                     active
                       ? isDarkMode
                         ? 'bg-neutral-500 text-white'
-                        : 'bg-[#4f3af4] text-white'
+                        : 'bg-gray-100'
                       : ''
                   }`
                 }

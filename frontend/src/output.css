@@ -1581,8 +1581,13 @@ video {
   line-height: 1.75rem;
 }
 
-.text-sm {
+.text-md {
   font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
+.text-sm {
+  font-size: 0.800rem;
   line-height: 1.25rem;
 }
 
