@@ -18,11 +18,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 function Dashboard() {
     const location = useLocation();
-    const input_file = location.state?.file;
-
-    const navigate = useNavigate();
-
-    const [csvFile, setCsvFile] = useState(input_file);
+    
+    const [csvFile, setCsvFile] = useState(null);
     const [weeklyIncome, setWeeklyIncome] = useState(0.0);
     const [exTarget, setExTarget] = useState(0.0);
     const [chartView, setChartView] = useState('summary') // 'summary', 'netIncome', or 'avgWeekly'
@@ -50,7 +47,6 @@ function Dashboard() {
     //         ...
     //     ]
     // }
-    const [topExpenses, setTopExpenses] = useState({});
     const [expByMonth, setExpByMonth] = useState({});
 
     const MAX_WEEKLY_INCOME = 5000
@@ -65,8 +61,12 @@ function Dashboard() {
           // Convert back to a "File-like" object if needed (e.g., for parsing CSV again)
           const restoredFile = new File([savedFileContent], savedFileName, { type: 'text/csv' });
           setCsvFile(restoredFile);
+          console.log('restored', restoredFile.name)
+        } else {
+            const input_file = location.state?.file;
+            setCsvFile(input_file)
         }
-      }, []);
+    }, []);
 
     useEffect(() => {
         const theme = localStorage.getItem('theme');
@@ -79,7 +79,7 @@ function Dashboard() {
 
     useEffect(() => {
         if (csvFile) {
-            handleUpload()
+            handleUpload(csvFile)
           } else {
             // maybe redirect back to LandingPage or show a message
             console.log('No file received');
@@ -96,14 +96,13 @@ function Dashboard() {
         }
     }
 
-    const fetchTopExpenses = async () => {
-        try {
-            const res = await axios.get(`${API_URL}/top_expenses_by_month`);
-            setTopExpenses(res.data);
-        } catch (err) {
-            console.error("Failed to fetch top expenses", err);
-        }
-    };
+    // const fetchTopExpenses = async () => {
+    //     try {
+    //         const res = await axios.get(`${API_URL}/top_expenses_by_month`);
+    //     } catch (err) {
+    //         console.error("Failed to fetch top expenses", err);
+    //     }
+    // };
 
     const fetchExpensesByMonth = async () => {
         try {
@@ -132,7 +131,16 @@ function Dashboard() {
                         topCategory = category;
                     }
                 }
-                result[month] = {
+                // If month is in the format YYYY-MM change to May 2025 (full format)
+                let displayMonth = month;
+                const match = month.match(/^(\d{4})-(\d{2})$/);
+                if (match) {
+                    const [_, year, monthNum] = match;
+                    const date = new Date(`${year}-${monthNum}-01`);
+                    const monthName = date.toLocaleString('default', { month: 'long' });
+                    displayMonth = `${monthName} ${year}`;
+                }
+                result[displayMonth] = {
                     numExpenses,
                     total,
                     topCategory,
@@ -148,17 +156,20 @@ function Dashboard() {
     }
 
 
-    const handleUpload = async () => {
-        if (!csvFile) return;
+    const handleUpload = async (file) => {
+        console.log('New file to be uploaded:', file.name)
+
+        if (!file) return;
         const formData = new FormData();
-        formData.append("file", csvFile); // wrap csv file in a form object to send via HTTP
-        
-        localStorage.setItem('lastUploadedFileName', csvFile.name);
+        formData.append("file", file); // wrap csv file in a form object to send via HTTP
+
+        localStorage.setItem('lastUploadedFileName', file.name);
+        console.log('Last uploaded file set to ', file.name)
         const reader = new FileReader();
         reader.onload = () => {
             localStorage.setItem('lastUploadedFileContent', reader.result); // base64 or raw text
         };
-        reader.readAsText(csvFile);
+        reader.readAsText(file);
 
         try {
             const response = await axios.post(`${API_URL}/upload`, formData, {
@@ -167,8 +178,6 @@ function Dashboard() {
             setSummary(response.data);
             const monthExpData = await fetchExpensesByMonth()
             setExpByMonth(monthExpData);
-            fetchTopExpenses();
-            
         } catch (err) {
             alert("Error uploading file");
         }
