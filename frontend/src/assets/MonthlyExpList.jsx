@@ -30,7 +30,6 @@ function getCategoryIcon(category) {
 export default function MonthlyExpList({ data, isDarkMode }) {
     // Get months sorted descending (latest first)
     const months = Object.keys(data).sort((a, b) => new Date(b) - new Date(a));
-
     return (
         <div className="max-h-[30rem] flex flex-col gap-4 overflow-y-auto mt-2">
             {months.map((month, idx, arr) => {
@@ -58,11 +57,11 @@ export default function MonthlyExpList({ data, isDarkMode }) {
                                     <span className={`flex items-center text-xs font-medium ml-1
                                         ${isIncrease
                                             ? isDarkMode
-                                                ? 'text-red-400'
-                                                : 'text-[#F04C4B]'
+                                                ? 'text-red-theme-dark'
+                                                : 'text-red-theme'
                                             : isDarkMode
-                                                ? 'text-green-400'
-                                                : 'text-[#2FC65E]'
+                                                ? 'text-green-theme-dark'
+                                                : 'text-green-theme'
                                         }`}>
                                         {isIncrease
                                             ? <ArrowUpRight className="w-4 h-4 mr-0.5" />

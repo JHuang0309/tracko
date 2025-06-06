@@ -21,7 +21,7 @@ const categoryIcons = {
     icon: Dumbbell,
     color: "text-[#ec4799]",
     highlight: "bg-[#fce7f4]",
-    darkColor: "text-[#f87171]", // closest to pink in this palette
+    darkColor: "text-[#f87171]",
     darkHighlight: "bg-[#991b1b]",
     description: "Tennis, bookings"
   },

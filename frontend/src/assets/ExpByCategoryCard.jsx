@@ -163,11 +163,11 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                                                     ? isDecrease
                                                         ? ''
                                                         : isDarkMode
-                                                            ? 'text-[#F04C4B]'
-                                                            : 'text-[#F04C4B]'
+                                                            ? 'text-red-theme-dark'
+                                                            : 'text-red-theme'
                                                     : isDarkMode
-                                                        ? 'text-[#2FC65E]'
-                                                        : 'text-[#2FC65E]'
+                                                        ? 'text-green-theme-dark'
+                                                        : 'text-green-theme'
                                                 }`}> 
                                                 {isIncrease
                                                     ? <ArrowUpRight className="w-4 h-4 mr-0.5" />

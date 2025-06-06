@@ -8,11 +8,11 @@ import '../index.css'
 import SummaryChart from '../assets/charts/SummaryChart';
 import NetIncomeChart from '../assets/charts/NetIncomeChart';
 import AvgWeeklyExpChart from '../assets/charts/AvgWeeklyExpChart';
-import TopExpensesList from '../assets/TopExpensesList';
 import ChartDropdown from '../assets/ChartDropdown';
 import Navbar from '../assets/navbar';
 import MonthlyExpList from '../assets/MonthlyExpList';
 import ExpByCategoryCard from '../assets/ExpByCategoryCard';
+import MonthSnapshot from '../assets/MonthSnapshot';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -112,7 +112,7 @@ function Dashboard() {
             const months = [...new Set(arr.map(item => item.Month))];
             const result = {};
             months.forEach(month => {
-                const monthExpenses = arr.filter(item => item.Month === month && item.Amount > 0);
+                const monthExpenses = arr.filter(item => item.Month === month);
                 const numExpenses = monthExpenses.length;
                 const total = monthExpenses.reduce((sum, item) => sum + item.Amount, 0);
 
@@ -224,7 +224,7 @@ function Dashboard() {
                         
                         {/* Large chart card */}
                         <div className={`col-span-3 rounded-lg p-4 border`}>
-                            <h2 className="text-lg font-bold">Statistics</h2>
+                            <h2 className="text-lg font-bold">Visualisations</h2>
                                 <div className={`flex justify-end my-4`}>
                                     <ChartDropdown
                                         chartView={chartView}
@@ -444,8 +444,10 @@ input[type=number]::-webkit-outer-spin-button {
                             )}
                         </div>
                         <div className={`col-span-1 rounded-lg p-4 border overflow-x-auto`}>
-                            <h3 className="text-lg font-bold">Monthly Breakdown</h3>
-                            {/* <ExpensesPieChart data={categoryData} /> */}
+                            <h3 className="text-lg font-bold">Monthly Snapshot</h3>
+                            {summary && Object.keys(summary).length > 0 && (
+                                <MonthSnapshot data={summary} revenue={weeklyIncome} exTarget={exTarget}/>
+                            )}
                         </div>
                     </div>
                 </div>
