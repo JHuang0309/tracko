@@ -42,16 +42,16 @@ export default function Footer({ isDarkMode }) {
             <nav aria-label="Resources Navigation">
               <ul className="space-y-1 text-xs">
                 <li>
-                  <a href="/documentation" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Documentation</a>
+                  <a href="#documentation" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Documentation</a>
                 </li>
                 <li>
-                  <a href="/case-studies" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Case Studies</a>
+                  <a href="#case-studies" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Case Studies</a>
                 </li>
                 <li>
-                  <a href="/blog" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Blog</a>
+                  <a href="#blog" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Blog</a>
                 </li>
                 <li>
-                  <a href="/support" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Support</a>
+                  <a href="#support" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Support</a>
                 </li>
               </ul>
             </nav>
@@ -61,16 +61,16 @@ export default function Footer({ isDarkMode }) {
             <nav aria-label="Company Navigation">
               <ul className="space-y-1 text-xs">
                 <li>
-                  <a href="/about" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">About</a>
+                  <a href="#about" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">About</a>
                 </li>
                 <li>
-                  <a href="/careers" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Careers</a>
+                  <a href="#careers" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Careers</a>
                 </li>
                 <li>
-                  <a href="/contact" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Contact</a>
+                  <a href="#contact" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Contact</a>
                 </li>
                 <li>
-                  <a href="/privacy" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Privacy Policy</a>
+                  <a href="#privacy-policy" className="text-gray-500 hover:text-neutral-700 rounded py-1 inline-block">Privacy Policy</a>
                 </li>
               </ul>
             </nav>
@@ -81,9 +81,10 @@ export default function Footer({ isDarkMode }) {
           <div className="flex gap-4">
             {/* Social links */}
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/JaydenHuang1"
               className="text-gray-500 hover:text-neutral-700 rounded p-2"
-              aria-label="LinkedIn"
+              target="_blank"
+              rel="noopener noreferrer" 
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -102,27 +103,12 @@ export default function Footer({ isDarkMode }) {
                 <circle cx="4" cy="4" r="2"></circle>
               </svg>
             </a>
-            <a
-              href="https://twitter.com"
+            <a 
+              href="https://github.com/JHuang0309" 
               className="text-gray-500 hover:text-neutral-700 rounded p-2"
-              aria-label="Twitter"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-5 w-5"
-              >
-                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-              </svg>
-            </a>
-            <a href="https://github.com" className="text-gray-500 hover:text-neutral-700 rounded p-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

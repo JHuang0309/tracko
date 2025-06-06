@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Download } from 'lucide-react';
 import axios from 'axios';
 import '../index.css'
@@ -224,7 +224,7 @@ function Dashboard() {
                 
                 <button 
                     className={`flex items-center gap-2 p-2 h-10 mx-2 text-xs rounded-md border   disabled:opacity-50
-                                ${isDarkMode ? 'text-white hover:bg-neutral-800' : 'text-black hover:bg-gray-100'}`}
+                                ${isDarkMode ? 'text-white border-gray-600 hover:bg-neutral-800' : 'text-black hover:bg-gray-100'}`}
                     onClick={handleDownload}
                     disabled={!csvFile}
                     >

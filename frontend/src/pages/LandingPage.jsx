@@ -45,6 +45,7 @@ function LandingPage() {
     useEffect(() => {
         localStorage.removeItem('lastUploadedFileContent');
         localStorage.removeItem('lastUploadedFileName');
+        window.scrollTo(0, 0);
     }, [])
 
     return (

@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline'
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar({ toggleTheme, isDarkMode }) {
     const [darkMode, setDarkMode] = useState(isDarkMode);
     const [scrolled, setScrolled] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         setDarkMode(isDarkMode);
@@ -30,7 +33,7 @@ export default function Navbar({ toggleTheme, isDarkMode }) {
     >
       <div className="container flex h-16 items-center justify-between px-[2rem]">
         <div className="flex items-center">
-          <span className={`text-2xl font-bold ${darkMode ? 'text-white' : ''}`}>TrackX</span>
+          <span className={`text-2xl font-bold hover:cursor-pointer ${darkMode ? 'text-white' : ''}`} onClick={() => navigate('/')}>TrackX</span>
         </div>
         <div className={`flex items-center justify-center h-10 w-10 rounded-full ${darkMode ? 'hover:bg-neutral-700' : 'hover:bg-gray-100'} transition duration-300`}>
           <button
