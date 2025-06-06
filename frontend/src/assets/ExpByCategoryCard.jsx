@@ -143,7 +143,7 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                                 const isDecrease = diff < 0;
 
                                 return (
-                                <div key={cat} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md">
+                                <div key={cat} className={`flex justify-between items-center p-2 rounded-md ${isDarkMode ? 'hover:bg-neutral-800' : 'hover:bg-gray-100'}`}>
                                     <div className="flex items-center gap-2">
                                         <Icon className={`w-10 h-10 ${isDarkMode ? `${darkColor} ${darkHighlight}` : `${color} ${highlight}`} text-blue-500 p-2 rounded-lg`} />
                                         <div className="flex flex-col">

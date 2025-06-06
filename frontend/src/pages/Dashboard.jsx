@@ -426,7 +426,7 @@ input[type=number]::-webkit-outer-spin-button {
                                 <label
                                     htmlFor="csvUpload"
                                     className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4 text-sm cursor-pointer transition ${
-                                        isDarkMode ? 'border-gray-600 text-white hover:bg-neutral-700' : 'border-gray-300 text-gray-600'
+                                        isDarkMode ? 'border-gray-600 text-white hover:bg-neutral-800' : 'border-gray-300 text-gray-600 hover:bg-gray-100'
                                     }`}
                                 >
                                 {/* <svg className="w-6 h-4 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
