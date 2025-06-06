@@ -8,7 +8,7 @@ export default function Footer({ isDarkMode }) {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className={`bottom-0 w-full border-t py-12 ${darkMode ? 'border-gray-600 bg-dark-blue' : 'border-gray-200 bg-white'}`}>
+    <footer className={`bottom-0 w-full border-t py-12 ${darkMode ? 'border-gray-600 bg-gray-950' : 'border-gray-200 bg-white'}`}>
       <div className="container px-4 md:px-6">
         <div className="grid grid-cols-4 gap-6 pb-6">
           <div className="space-y-4">

@@ -3,7 +3,7 @@ import { Calendar, Target } from "lucide-react";
 
 import MonthChangeIcon from "./ui/MonthChangeIcon";
 
-export default function MonthSnapshot({ data, revenue, exTarget }) {
+export default function MonthSnapshot({ data, revenue, exTarget, isDarkMode }) {
     const months = useMemo(
         () =>
             Object.keys(data?.monthly || {}).sort(
@@ -46,17 +46,17 @@ export default function MonthSnapshot({ data, revenue, exTarget }) {
         .slice(0, 6);
 
     return (
-        <div className="w-full max-w-xl mx-auto bg-white rounded-lg shadow p-2">
+        <div className={`w-full max-w-xl mx-auto rounded-lg shadow p-2 ${isDarkMode ? 'bg-neutral-900' : 'bg-white'}`}>
             {/* Header */}
             <div className="flex justify-between mb-2">
                 <div className="w-full">
-                    <span className="text-gray-700 text-sm font-medium">Month Performance </span><span className="text-gray-500 text-sm">(relative to last)</span>
-                    <MonthChangeIcon percent={percent}/>
+                    <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-700'} text-sm font-medium`}>Month Performance </span><span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} text-sm`}>(relative to last)</span>
+                    <MonthChangeIcon percent={percent} isDarkMode={isDarkMode}/>
                     <div className="flex items-center gap-1">
-                        <span className="text-2xl font-bold">{currentMonth}</span>
+                        <span className={`${isDarkMode ? 'text-white' : ''} text-2xl font-bold`}>{currentMonth}</span>
                     </div>
                     <div>
-                        <span className="text-xs text-gray-500">Expenses: {monthRecords.length}</span>
+                        <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Expenses: {monthRecords.length}</span>
                     </div>
                 </div>
             </div>
@@ -64,14 +64,14 @@ export default function MonthSnapshot({ data, revenue, exTarget }) {
             {/* Progress Bar */}
             <div className="my-3">
                 <div className="flex justify-between text-xs mb-1">
-                    <span>Spending</span>
+                    <span className={`${isDarkMode ? 'text-white' : ''}`}>Spending</span>
                     <span>
                         {spendingPercent.toFixed(0)}%
                     </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className={`w-full ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-full h-2`}>
                     <div
-                        className="bg-[#f59e42] h-2 rounded-full"
+                        className={`${isDarkMode ? 'bg-[#f59e0b]' : 'bg-[#f59e42]'} h-2 rounded-full`}
                         style={{ width: `${spendingPercent}%` }}
                     ></div>
                 </div>
@@ -80,14 +80,14 @@ export default function MonthSnapshot({ data, revenue, exTarget }) {
             {/* Revenue | Spending */}
             <div className="grid grid-cols-2 gap-4 my-4">
                 <div className="flex flex-col items-left">
-                    <span className="text-xs text-gray-500">Revenue</span>
-                    <span className="font-bold text-lg text-green-600">
+                    <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Revenue</span>
+                    <span className={`font-bold text-lg ${isDarkMode ? 'text-white' : ''}`}>
                         ${monthRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                 </div>
                 <div className="flex flex-col items-left">
-                    <span className="text-xs text-gray-500">Spending</span>
-                    <span className="font-bold text-lg text-red-500">
+                    <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Spending</span>
+                    <span className={`font-bold text-lg ${isDarkMode ? 'text-white' : ''}`}>
                         ${spending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                 </div>
@@ -95,47 +95,37 @@ export default function MonthSnapshot({ data, revenue, exTarget }) {
 
             {/* Calendar/Target */}
             <div className="flex items-center gap-2 mb-4">
-                <Calendar className="w-4 h-4 text-gray-400" />
-                <span className="text-xs text-gray-500">Expenditure target: ${exTarget}</span>
+                <Calendar className={`w-4 h-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Expenditure target: ${exTarget}</span>
             </div>
 
             {/* Top Transactions */}
             <div className="mb-4">
-                <h4 className="text-lg font-semibold mb-2">Top Transactions</h4>
+                <h4 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : ''}`}>Top Transactions</h4>
                 <ul className="text-xs">
                     {topTransactions.map((tx, idx) => (
-                        <li key={idx} className="flex justify-between py-1 border-b last:border-b-0">
+                        <li key={idx} className={`flex justify-between py-1 border-b last:border-b-0 ${isDarkMode ? 'border-gray-600 text-white' : ''}`}>
                             <span className="truncate">{tx.Category}</span>
                             <span className="font-medium">${tx.Amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </li>
                     ))}
                     {topTransactions.length === 0 && (
-                        <li className="text-gray-400">No transactions</li>
+                        <li className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>No transactions</li>
                     )}
                 </ul>
             </div>
 
-            {/* Buttons */}
-            {/* <div className="flex justify-between gap-2 mt-4">
-                <button className="flex-1 py-2 bg-green-100 text-green-700 rounded font-semibold hover:bg-green-200 transition">
-                    + Add revenue
-                </button>
-                <button className="flex-1 py-2 bg-blue-100 text-blue-700 rounded font-semibold hover:bg-blue-200 transition">
-                    View Breakdown
-                </button>
-            </div> */}
-
             {/* Month navigation */}
             <div className="flex justify-center gap-2 mt-4">
                 <button
-                    className="p-2 rounded hover:bg-gray-100 disabled:opacity-40"
+                    className={`p-2 rounded ${isDarkMode ? 'text-gray-400 hover:text-white disabled:text-gray-700 disabled:hover:text-gray-700' : 'disabled:text-gray-300 hover:text-gray-300'}`}
                     onClick={() => setMonthIdx((idx) => Math.max(0, idx - 1))}
                     disabled={monthIdx === 0}
                 >
                     {"<"}
                 </button>
                 <button
-                    className="p-2 rounded hover:bg-gray-100 disabled:opacity-40"
+                    className={`p-2 rounded ${isDarkMode ? 'text-gray-400 hover:text-white disabled:text-gray-700 disabled:hover:text-gray-700' : 'disabled:text-gray-300 hover:text-gray-300'}`}
                     onClick={() => setMonthIdx((idx) => Math.min(months.length - 1, idx + 1))}
                     disabled={monthIdx === months.length - 1}
                 >

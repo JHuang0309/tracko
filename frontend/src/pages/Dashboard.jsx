@@ -13,6 +13,7 @@ import Navbar from '../assets/navbar';
 import MonthlyExpList from '../assets/MonthlyExpList';
 import ExpByCategoryCard from '../assets/ExpByCategoryCard';
 import MonthSnapshot from '../assets/MonthSnapshot';
+import Footer from '../assets/footer';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -214,6 +215,7 @@ function Dashboard() {
     return (
         <>
             <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode}/>
+            <div className='flex flex-col'>
             <div className={`flex justify-between items-center p-4 ${isDarkMode ? 'bg-neutral-900' : ''}`}>
                 <div>
                     <h2 className={`font-bold text-4xl pl-3 ${isDarkMode ? 'text-white' : ''}`}>Dashboard</h2>
@@ -454,7 +456,7 @@ input[type=number]::-webkit-outer-spin-button {
                     </div>
 
                     {/* Row 2 */}
-                    <div className="max-h-[35rem] grid grid-cols-3 gap-4">
+                    <div className="max-h-[40rem] grid grid-cols-3 gap-4">
                         <div className={`col-span-2 rounded-lg p-4 border ${isDarkMode ? 'border-gray-600' : ''}`}>
                             <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : ''}`}>Expenditure by Category</h2>
                             {summary && Object.keys(summary).length > 0 && (
@@ -469,7 +471,10 @@ input[type=number]::-webkit-outer-spin-button {
                         </div>
                     </div>
                 </div>
-            </div>        
+            </div>
+            <Footer isDarkMode={isDarkMode}/>
+            </div>
+            
         </>
     );
 }

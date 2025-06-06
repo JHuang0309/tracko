@@ -111,14 +111,14 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                     </div>
                     <div className="flex items-center gap-2">
                         <button
-                            className={`p-2 rounded disabled:opacity-40 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'hover:text-gray-600'}`}
+                            className={`p-2 rounded ${isDarkMode ? 'text-gray-400 hover:text-white disabled:text-gray-700 disabled:hover:text-gray-700' : 'disabled:text-gray-300 hover:text-gray-300'}`}
                             onClick={() => setMonthIdx((idx) => Math.max(0, idx - 1))}
                             disabled={monthIdx === 0}
                         >
                             <ChevronLeft />
                         </button>
                         <button
-                            className={`p-2 rounded disabled:opacity-40 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'hover:text-gray-600'}`}
+                            className={`p-2 rounded ${isDarkMode ? 'text-gray-400 hover:text-white disabled:text-gray-700 disabled:hover:text-gray-700' : 'disabled:text-gray-300 hover:text-gray-300'}`}
                             onClick={() => setMonthIdx((idx) => Math.min(months.length - 1, idx + 1))}
                             disabled={monthIdx === months.length - 1}
                         >

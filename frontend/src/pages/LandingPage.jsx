@@ -49,7 +49,7 @@ function LandingPage() {
 
     return (
         <>
-            <div className={`flex min-h-screen flex-col ${isDarkMode ? 'bg-dark-blue' : 'bg-white'}`}>
+            <div className={`flex min-h-screen flex-col ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
                 <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode}/>
                 <section className={`flex flex-col items-center text-center py-18 bg-gradient-radial ${isDarkMode ? 'from-dark-blue-900 via-dark-blue-800 to-dark-blue-700' : 'from-blue-400/40 via-blue-200/30 to-white/80'} gradient-center-top`}>
                     <div className={`rounded-md px-3 py-1 text-sm mb-6 bg-opacity-60 ${isDarkMode ? 'text-white bg-neutral-700' : 'text-gray-900 bg-blue-100'}`}>Financial Management</div>
