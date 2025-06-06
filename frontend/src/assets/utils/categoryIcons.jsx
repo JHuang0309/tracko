@@ -45,8 +45,8 @@ const categoryIcons = {
     icon: ShoppingBag,
     color: "text-gray-500",
     highlight: "bg-gray-100",
-    darkColor: "text-gray-100",
-    darkHighlight: "bg-[#1e3a8a]",
+    darkColor: "text-gray-400",
+    darkHighlight: "bg-gray-800",
     description: "All other expenses"
   },
 };

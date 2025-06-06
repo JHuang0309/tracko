@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Calendar, Target } from "lucide-react";
 
 import MonthChangeIcon from "./ui/MonthChangeIcon";
@@ -12,6 +12,8 @@ export default function MonthSnapshot({ data, revenue, exTarget }) {
         [data]
     );
     const [monthIdx, setMonthIdx] = useState(0);
+    const initial = (revenue + exTarget) > 0 ? (exTarget / (revenue + exTarget)) * 100 : 0;
+    const [targetPercent, setTargetPercent] = useState(exTarget / (initial))
 
     const currentMonth = months[monthIdx];
     const prevMonth = months[monthIdx + 1];
@@ -48,7 +50,7 @@ export default function MonthSnapshot({ data, revenue, exTarget }) {
             {/* Header */}
             <div className="flex justify-between mb-2">
                 <div className="w-full">
-                    <span className="text-gray-700 text-sm font-medium">Month Breakdown</span>
+                    <span className="text-gray-700 text-sm font-medium">Month Performance </span><span className="text-gray-500 text-sm">(relative to last)</span>
                     <MonthChangeIcon percent={percent}/>
                     <div className="flex items-center gap-1">
                         <span className="text-2xl font-bold">{currentMonth}</span>
@@ -69,7 +71,7 @@ export default function MonthSnapshot({ data, revenue, exTarget }) {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                        className="bg-gray-900 h-2 rounded-full"
+                        className="bg-[#f59e42] h-2 rounded-full"
                         style={{ width: `${spendingPercent}%` }}
                     ></div>
                 </div>

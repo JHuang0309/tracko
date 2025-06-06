@@ -21,10 +21,10 @@ export default function Navbar({ toggleTheme, isDarkMode }) {
     <header
       className={`sticky-top w-full border-b transition-colors duration-300 ${scrolled
   ? (darkMode
-      ? "bg-dark-blue bg-opacity-80 border-gray-600"
+      ? "bg-dark-blue bg-opacity-80 border-neutral-600"
       : "bg-white bg-opacity-80 border-gray-200")
   : (darkMode
-      ? "bg-dark-blue border-gray-600"
+      ? "bg-dark-blue border-neutral-600"
       : "bg-white border-gray-200")}`}
       style={{ backdropFilter: scrolled ? "blur(8px)" : "none" }}
     >

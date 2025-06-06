@@ -97,28 +97,28 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
 
     return (
         <>
-            <div className="w-full max-w-xl mx-auto bg-white rounded-lg shadow p-3">
+            <div className={`w-full max-w-xl mx-auto rounded-lg shadow p-3 ${isDarkMode ? 'bg-neutral-900' : 'bg-white'}`}>
                 {/* Header */}
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex flex-col">
-                    <span className="text-gray-700 text-sm font-medium mb-1">
+                    <span className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                         Monthly Spending
                     </span>
-                    <span className="text-4xl font-bold mb-1">
+                    <span className={`text-4xl font-bold mb-1 ${isDarkMode ? 'text-white' : ''}`}>
                         ${currentAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
-                    <span className="text-gray-700 text-xs">{currentMonth}</span>
+                    <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>{currentMonth}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
-                            className="p-2 rounded hover:bg-gray-100 disabled:opacity-40"
+                            className={`p-2 rounded disabled:opacity-40 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'hover:text-gray-600'}`}
                             onClick={() => setMonthIdx((idx) => Math.max(0, idx - 1))}
                             disabled={monthIdx === 0}
                         >
                             <ChevronLeft />
                         </button>
                         <button
-                            className="p-2 rounded hover:bg-gray-100 disabled:opacity-40"
+                            className={`p-2 rounded disabled:opacity-40 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'hover:text-gray-600'}`}
                             onClick={() => setMonthIdx((idx) => Math.min(months.length - 1, idx + 1))}
                             disabled={monthIdx === months.length - 1}
                         >
@@ -126,14 +126,14 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                         </button>
                     </div>
                 </div>
-                <div className="border my-4"></div>
+                <div className={`my-4 ${isDarkMode ? 'border-05 border-gray-600' : 'border'}`}></div>
                 <div className="flex">
                     {/* Categories */}
                     <div className="flex flex-col flex-1">
-                        <h3 className="text-base font-semibold mb-2">Spending Categories</h3>
+                        <h3 className={`text-base font-semibold mb-2 ${isDarkMode ? 'text-white' : ''}`}>Spending Categories</h3>
                         <div className="flex flex-col gap-2">
                             {allCategories.map((cat) => {
-                                const { icon: Icon, color, highlight, description } = getCategoryIcon(cat);
+                                const { icon: Icon, color, highlight, description, darkColor, darkHighlight } = getCategoryIcon(cat);
                                 const spent = spendingCategories[cat] || 0;
                                 const prevSpent = prevSpendingCategories[cat] || 0;
                                 const diff = spent - prevSpent;
@@ -145,16 +145,16 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                                 return (
                                 <div key={cat} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md">
                                     <div className="flex items-center gap-2">
-                                        <Icon className={`w-10 h-10 ${color} ${highlight} text-blue-500 p-2 rounded-lg`} />
+                                        <Icon className={`w-10 h-10 ${isDarkMode ? `${darkColor} ${darkHighlight}` : `${color} ${highlight}`} text-blue-500 p-2 rounded-lg`} />
                                         <div className="flex flex-col">
-                                            <span className="font-semibold text-md capitalize">
+                                            <span className={`font-semibold text-md capitalize ${isDarkMode ? 'text-white' : ''}`}>
                                                 {cat.replace(/(^|\s)\S/g, (l) => l.toUpperCase())}
                                             </span>
-                                            <p className="text-xs text-gray-500">{`${description}`}</p>
+                                            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{`${description}`}</p>
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-end ">
-                                        <span className="font-semibold text-md">
+                                        <span className={`font-semibold text-md ${isDarkMode ? 'text-white' : ''}`}>
                                             ${spent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
                                         {percent !== null && (
@@ -184,10 +184,10 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                     {/* Pie chart */}
                     <div className="flex">
                         { pieChartData && pieChartData.length > 0 ? (
-                                <ExpensesPieChart data={pieChartData} />
+                                <ExpensesPieChart data={pieChartData} isDarkMode={isDarkMode}/>
                             ) :(
                                 <div className="flex flex-col items-center justify-center">
-                                    <RefreshCw className="w-8 h-8 mb-2 text-gray-400" />
+                                    <RefreshCw className={`w-8 h-8 mb-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                                     <div className="flex items-center justify-center min-w-4md h-40 text-gray-400">Refresh page to load graph</div>
                                 </div>
                                 

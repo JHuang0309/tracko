@@ -56,7 +56,7 @@ function NetIncomeChart({ weekly, weeklyIncome, darkMode }) {
                         color: textColor,
                     }
                 },
-                title: { display: true, text: 'Net Weekly Income' }
+                title: { display: true, text: 'Net Weekly Income', color: textColor }
             },
             scales: {
                 y: {
@@ -68,6 +68,10 @@ function NetIncomeChart({ weekly, weeklyIncome, darkMode }) {
                     },
                     ticks: {
                       color: textColor
+                    },
+                    border: {
+                        color: isDarkMode ? '#ffffff' : '#1f2937',
+                        width: 0.5,
                     }
                 },
                 x: {
@@ -78,6 +82,10 @@ function NetIncomeChart({ weekly, weeklyIncome, darkMode }) {
                     // },
                     ticks: {
                       color: textColor
+                    },
+                    border: {
+                        color: isDarkMode ? '#ffffff' : '#1f2937',
+                        width: 0.5,
                     }
                 }
             }

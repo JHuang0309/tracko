@@ -18,7 +18,7 @@ const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
 });
 
-function CustomLegend({ payload, chartData }) {
+function CustomLegend({ payload, chartData, isDarkMode }) {
     if (!payload || !chartData) return null;
 
     // Calculate total for percentage
@@ -37,8 +37,8 @@ function CustomLegend({ payload, chartData }) {
                             className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: entry.color }}
                         ></span>
-                        <span className="truncate">{entry.value}</span>
-                        <span className="text-gray-400 ml-1">{percent}%</span>
+                        <span className={`truncate ${isDarkMode ? 'text-white' : ''}`}>{entry.value}</span>
+                        <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-400'} ml-1`}>{percent}%</span>
                     </div>
                 );
             })}
@@ -46,7 +46,7 @@ function CustomLegend({ payload, chartData }) {
     );
 }
 
-function ExpensesPieChart({ data }) {
+function ExpensesPieChart({ data, isDarkMode }) {
     return (
         <div className='flex items-center min-w-4md'>
             <ResponsiveContainer>
@@ -60,7 +60,9 @@ function ExpensesPieChart({ data }) {
                         outerRadius={100}
                         innerRadius={45}
                         label={false}
-                        padAngle={4}
+                        padAngle={5}
+                        stroke={`${isDarkMode ? '#111827' : '#fff'}`}
+                        strokeWidth={4}
                     >
                         {data.map((entry, index) => (
                             <Cell
@@ -71,7 +73,7 @@ function ExpensesPieChart({ data }) {
                     </Pie>
                     <Tooltip formatter={(value) => formatter.format(value)} />
                     <Legend
-                        content={props => <CustomLegend {...props} chartData={data} />}
+                        content={props => <CustomLegend {...props} chartData={data} isDarkMode={isDarkMode}/>}
                         layout="vertical"
                         verticalAlign="bottom"
                     />

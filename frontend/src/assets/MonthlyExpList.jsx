@@ -47,7 +47,7 @@ export default function MonthlyExpList({ data, isDarkMode }) {
                 return (
                     <div
                         key={month}
-                        className={`flex items-center justify-between bg-white p-2 rounded-md text-xs ${isDarkMode ? 'bg-dark-blue' : 'bg-white hover:bg-gray-100'}`}
+                        className={`flex items-center justify-between p-2 rounded-md text-xs ${isDarkMode ? 'bg-neutral-900 hover:bg-neutral-800' : 'bg-white hover:bg-gray-100'}`}
                     >
                         {/* Month, change, and details */}
                         <div className="flex flex-col flex-grow min-w-0">
@@ -71,12 +71,12 @@ export default function MonthlyExpList({ data, isDarkMode }) {
                                 )}
                             </div>
                             <div className="flex flex-col gap-2 mt-1">
-                                <div className={`text-xs ${isDarkMode ? 'text-blue-100' : 'text-gray-500'}`}>
+                                <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                     {thisMonth.numExpenses} expenses
                                 </div>
                                 
-                                <div className={`flex gap-2 text-xs truncate ${isDarkMode ? 'text-blue-100' : 'text-gray-500'}`}>
-                                    <TopCategoryIcon className={`w-4 h-4 ${isDarkMode ? 'text-blue-200' : 'text-blue-500'}`} />
+                                <div className={`flex gap-2 text-xs truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    <TopCategoryIcon className={`w-4 h-4`} />
                                     {thisMonth.topCategory}
                                 </div>
                             </div>

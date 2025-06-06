@@ -91,6 +91,10 @@ function AvgWeeklyExpChart({ weekly, labels, darkMode }) {
                     },
                     ticks: {
                         color: textColor
+                    },
+                    border: {
+                        color: isDarkMode ? '#ffffff' : '#1f2937',
+                        width: 0.5,
                     }
                 },
                 x: {
@@ -102,6 +106,10 @@ function AvgWeeklyExpChart({ weekly, labels, darkMode }) {
                     // },
                     ticks: {
                         color: textColor
+                    },
+                    border: {
+                        color: isDarkMode ? '#ffffff' : '#1f2937',
+                        width: 0.5,
                     }
                 }
             }

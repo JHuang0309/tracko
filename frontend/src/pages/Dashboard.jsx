@@ -18,14 +18,19 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 function Dashboard() {
     const location = useLocation();
-    
     const [csvFile, setCsvFile] = useState(null);
-    const [weeklyIncome, setWeeklyIncome] = useState(0.0);
-    const [exTarget, setExTarget] = useState(0.0);
+
+    const [weeklyIncome, setWeeklyIncome] = useState(() => {
+        const saved = localStorage.getItem('weeklyIncome');
+        return saved ? Number(saved) : 0.0;
+    });
+    const [exTarget, setExTarget] = useState(() => {
+        const saved = localStorage.getItem('exTarget');
+        return saved ? Number(saved) : 0.0;
+    });
+ 
     const [chartView, setChartView] = useState('summary') // 'summary', 'netIncome', or 'avgWeekly'
-    
     const [isDarkMode, setIsDarkMode] = useState(false);
-    
     const [summary, setSummary] = useState(null);
     // summary data structure
     // {
@@ -61,12 +66,19 @@ function Dashboard() {
           // Convert back to a "File-like" object if needed (e.g., for parsing CSV again)
           const restoredFile = new File([savedFileContent], savedFileName, { type: 'text/csv' });
           setCsvFile(restoredFile);
-          console.log('restored', restoredFile.name)
         } else {
             const input_file = location.state?.file;
             setCsvFile(input_file)
         }
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem('weeklyIncome', weeklyIncome);
+    }, [weeklyIncome]);
+
+    useEffect(() => {
+        localStorage.setItem('exTarget', exTarget);
+    }, [exTarget]);
 
     useEffect(() => {
         const theme = localStorage.getItem('theme');
@@ -148,7 +160,6 @@ function Dashboard() {
                     spendingCategories: categoryTotals,
                 };
             });
-            // console.log(result)
             return result;
         } catch {
             alert("Error obtaining monthly expenditure data");
@@ -157,14 +168,12 @@ function Dashboard() {
 
 
     const handleUpload = async (file) => {
-        console.log('New file to be uploaded:', file.name)
 
         if (!file) return;
         const formData = new FormData();
         formData.append("file", file); // wrap csv file in a form object to send via HTTP
 
         localStorage.setItem('lastUploadedFileName', file.name);
-        console.log('Last uploaded file set to ', file.name)
         const reader = new FileReader();
         reader.onload = () => {
             localStorage.setItem('lastUploadedFileContent', reader.result); // base64 or raw text
@@ -205,15 +214,15 @@ function Dashboard() {
     return (
         <>
             <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode}/>
-            <div className={`flex justify-between items-center p-4`}>
+            <div className={`flex justify-between items-center p-4 ${isDarkMode ? 'bg-neutral-900' : ''}`}>
                 <div>
                     <h2 className={`font-bold text-4xl pl-3 ${isDarkMode ? 'text-white' : ''}`}>Dashboard</h2>
                     <p className={`pl-3 mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>Overview of your spending and net revenue</p>
                 </div>
                 
                 <button 
-                    className={`flex items-center gap-2 p-2 h-10 mx-2 text-xs rounded-md border hover:bg-gray-100  disabled:opacity-50
-                                ${isDarkMode ? 'text-white' : 'text-black'}`}
+                    className={`flex items-center gap-2 p-2 h-10 mx-2 text-xs rounded-md border   disabled:opacity-50
+                                ${isDarkMode ? 'text-white hover:bg-neutral-800' : 'text-black hover:bg-gray-100'}`}
                     onClick={handleDownload}
                     disabled={!csvFile}
                     >
@@ -221,19 +230,19 @@ function Dashboard() {
                     Export Expense Data
                 </button>
             </div>
-            <div className={`flex min-h-screen p-4 transition-colors duration-300 pd-8`}>  
+            <div className={`flex min-h-screen p-4 transition-colors duration-300 pd-8 ${isDarkMode ? 'bg-neutral-900' : ''}`}>  
                 <div className="flex mx-auto grid grid-rows-2 gap-6">
                     {/* Row 1 */}
                     <div className="grid grid-cols-5 gap-2">
                         {/* Monthly expenses card */}
-                        <div className={`col-span-1 rounded-lg border p-4 flex flex-col`}>
-                            <h2 className="text-lg font-bold">Monthly Expenditure</h2>
-                            {Object.keys(expByMonth).length > 0 && <MonthlyExpList data={expByMonth} />}
+                        <div className={`col-span-1 rounded-lg border p-4 flex flex-col ${isDarkMode ? 'border-neutral-600' : ''}`}>
+                            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : ''}`}>Monthly Expenditure</h2>
+                            {Object.keys(expByMonth).length > 0 && <MonthlyExpList data={expByMonth} isDarkMode={isDarkMode}/>}
                         </div>
                         
                         {/* Large chart card */}
-                        <div className={`col-span-3 rounded-lg p-4 border`}>
-                            <h2 className="text-lg font-bold">Visualisations</h2>
+                        <div className={`col-span-3 rounded-lg p-4 border ${isDarkMode ? 'border-neutral-600' : ''}`}>
+                            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : ''}`}>Visualisations</h2>
                                 <div className={`flex justify-end my-4`}>
                                     <ChartDropdown
                                         chartView={chartView}
@@ -269,9 +278,9 @@ function Dashboard() {
                         {/* Stack of smaller cards */}
                         <div className="col-span-1 grid grid-rows-3 gap-2">
                             {/* Income input card */}
-                            <div className={`flex flex-col rounded-lg p-4 border`}>
-                                <h3 className="text-sm font-medium">Weekly Income</h3>
-                                <p className={`text-xs mb-2 ${isDarkMode ? 'text-white' : 'text-gray-500'}`}>
+                            <div className={`flex flex-col rounded-lg p-4 border ${isDarkMode ? 'border-neutral-600' : ''}`}>
+                                <h3 className={`text-sm font-medium ${isDarkMode ? 'text-white' : ''}`}>Weekly Income</h3>
+                                <p className={`text-xs mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                     Adjust your weekly income using the slider below:
                                 </p>
 
@@ -333,9 +342,9 @@ input[type=number]::-webkit-outer-spin-button {
                                 />
                             </div>
                             {/* Monthly expenditure target card */}
-                            <div className={`flex flex-col rounded-lg p-4 border`}>
-                                <h3 className="text-sm font-medium">Monthly Expenditure Target</h3>
-                                <p className={`text-xs mb-2 ${isDarkMode ? 'text-white' : 'text-gray-500'}`}>
+                            <div className={`flex flex-col rounded-lg p-4 border ${isDarkMode ? 'border-neutral-600' : ''}`}>
+                                <h3 className={`text-sm font-medium ${isDarkMode ? 'text-white' : ''}`}>Monthly Expenditure Target</h3>
+                                <p className={`text-xs mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                     Adjust your monthly expenditure target using the slider below:
                                 </p>
 
@@ -399,7 +408,7 @@ input[type=number]::-webkit-outer-spin-button {
                             </div>
                             {/* New csv file input card  */}
                             <div
-                                className={`flex flex-col rounded-lg p-4 border`}
+                                className={`flex flex-col rounded-lg p-4 border ${isDarkMode ? 'border-neutral-600' : ''}`}
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => {
                                 e.preventDefault();
@@ -409,12 +418,12 @@ input[type=number]::-webkit-outer-spin-button {
                                 }
                                 }}
                             >
-                                <h3 className="text-sm font-medium">Visualise another dataset</h3>
-                                <p className="text-xs text-gray-500 mb-3 mt-2">Drop a CSV file below or click to upload</p>
+                                <h3 className={`text-sm font-medium ${isDarkMode ? 'text-white' : ''}`}>Visualise another dataset</h3>
+                                <p className={`text-xs mb-3 mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Drop a CSV file below or click to upload</p>
 
                                 <label
                                     htmlFor="csvUpload"
-                                    className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4 text-sm cursor-pointer transition hover:bg-gray-100 ${
+                                    className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4 text-sm cursor-pointer transition ${
                                         isDarkMode ? 'border-gray-600 text-white hover:bg-neutral-700' : 'border-gray-300 text-gray-600'
                                     }`}
                                 >
@@ -426,7 +435,7 @@ input[type=number]::-webkit-outer-spin-button {
                                     id="csvUpload"
                                     type="file"
                                     accept=".csv"
-                                    className="hidden"
+                                    className={`hidden`}
                                     onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (file && file.name.endsWith('.csv')) {
@@ -446,16 +455,16 @@ input[type=number]::-webkit-outer-spin-button {
 
                     {/* Row 2 */}
                     <div className="max-h-[35rem] grid grid-cols-3 gap-4">
-                        <div className={`col-span-2 rounded-lg p-4 border`}>
-                            <h3 className="text-lg font-bold">Expenditure by Category</h3>
+                        <div className={`col-span-2 rounded-lg p-4 border ${isDarkMode ? 'border-gray-600' : ''}`}>
+                            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : ''}`}>Expenditure by Category</h2>
                             {summary && Object.keys(summary).length > 0 && (
                                 <ExpByCategoryCard data={expByMonth} isDarkMode={isDarkMode} />
                             )}
                         </div>
-                        <div className={`col-span-1 rounded-lg p-4 border overflow-x-auto`}>
-                            <h3 className="text-lg font-bold">Monthly Snapshot</h3>
+                        <div className={`col-span-1 rounded-lg p-4 border overflow-x-auto  ${isDarkMode ? 'border-gray-600' : ''}`}>
+                            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : ''}`}>Monthly Snapshot</h2>
                             {summary && Object.keys(summary).length > 0 && (
-                                <MonthSnapshot data={summary} revenue={weeklyIncome} exTarget={exTarget}/>
+                                <MonthSnapshot data={summary} revenue={weeklyIncome} exTarget={exTarget} isDarkMode={isDarkMode} />
                             )}
                         </div>
                     </div>

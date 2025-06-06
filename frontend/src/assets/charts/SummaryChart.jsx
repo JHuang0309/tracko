@@ -164,6 +164,10 @@ function SummaryChart({ monthly, weekly, weeklyIncome, darkMode, expTarget }) {
                 },
                 ticks: {
                   color: textColor
+                },
+                border: {
+                  color: isDarkMode ? '#ffffff' : '#1f2937',
+                  width: 0.5,
                 }
               },
               x: {
@@ -175,6 +179,10 @@ function SummaryChart({ monthly, weekly, weeklyIncome, darkMode, expTarget }) {
                 // },
                 ticks: {
                   color: textColor
+                },
+                border: {
+                  color: isDarkMode ? '#ffffff' : '#1f2937',
+                  width: 0.5,
                 }
               }
             }

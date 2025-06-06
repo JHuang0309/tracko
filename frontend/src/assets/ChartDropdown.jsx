@@ -15,9 +15,9 @@ function ChartDropdown({ chartView, setChartView, isDarkMode }) {
           <Listbox.Button
             className={`
               relative w-full cursor-pointer rounded-md py-2 pl-3 pr-10 text-left text-xs 
-              border border-gray-100 shadow-sm hover:bg-gray-100
+              border shadow-sm 
               min-w-[19em]
-              ${isDarkMode ? 'bg-neutral-800 text-white' : 'bg-white text-black'}
+              ${isDarkMode ? 'bg-neutral-900 text-white border-neutral-600' : 'bg-white text-black border-gray-100'}
             `}
           >
             {chartOptions.find(opt => opt.value === chartView)?.label}
@@ -27,7 +27,7 @@ function ChartDropdown({ chartView, setChartView, isDarkMode }) {
           </Listbox.Button>
 
           <Listbox.Options className={`absolute mt-1 max-h-60 w-full overflow-auto rounded-md py-1 text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
-            ${isDarkMode ? 'bg-neutral-700 text-white' : 'bg-white text-black'}
+            ${isDarkMode ? 'bg-neutral-900 text-white' : 'bg-white text-black'}
           `}>
             {chartOptions.map((option) => (
               <Listbox.Option
@@ -36,9 +36,10 @@ function ChartDropdown({ chartView, setChartView, isDarkMode }) {
                   `cursor-pointer select-none px-4 py-2 transition-colors rounded-sm ${
                     active
                       ? isDarkMode
-                        ? 'bg-neutral-500 text-white'
+                        ? 'text-white hover:bg-neutral-800'
                         : 'bg-gray-100'
-                      : ''
+                      : isDarkMode ? 'hover:bg-gray-100' : ''
+
                   }`
                 }
                 value={option.value}
