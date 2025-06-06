@@ -173,6 +173,7 @@ def clean_data(df):
 
     # Select only relevant columns
     export_df = df[['Date', 'Category', 'Amount', 'Month', 'Week']].copy()
+    export_df['Description'] = export_df['Category']
     export_df = standardise_categories(export_df)
 
     # Sort by Date

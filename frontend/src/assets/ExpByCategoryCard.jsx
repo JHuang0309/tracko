@@ -4,7 +4,8 @@ import {
     ChevronRight,
     MoreHorizontal,
     ArrowUpRight,
-    ArrowDownLeft
+    ArrowDownLeft,
+    RefreshCw,
 } from "lucide-react";
 import axios from 'axios';
 
@@ -20,9 +21,11 @@ function getCategoryIcon(category) {
 }
 
 export default function ExpByCategoryCard({ data, isDarkMode }) {
+    const [inputData, setInputData] = useState(data)
     const [categoryData, setCategoryData] = useState({});
     const [pieChartData, setPieChartData] = useState([]);
     const [monthIdx, setMonthIdx] = useState(0); // Start at latest month
+    const [loading, setLoading] = useState(false);
 
     // Only include months in the format "Month YYYY" (e.g., "May 2025")
     const months = Object.keys(data || {}).sort(
@@ -70,12 +73,14 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
             setCategoryData(monthCategoryTotals);
         } catch {
             alert("Error obtaining pie chart data");
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
         getPieChartData();
-    }, [])
+    }, [data])
 
     useEffect(() => {
         if (!categoryData || !months[monthIdx]) {
@@ -88,20 +93,7 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
             value: parseFloat(total.toFixed(2)),
         }));
         setPieChartData(pieData);
-    }, [monthIdx, categoryData]);
-
-    useEffect(() => {
-        if (!categoryData || !months[monthIdx]) {
-            setPieChartData([]);
-            return;
-        }
-        const catTotals = categoryData[months[monthIdx]] || {};
-        const pieData = Object.entries(catTotals).map(([category, total]) => ({
-            name: category,
-            value: parseFloat(total.toFixed(2)),
-        }));
-        setPieChartData(pieData);
-    }, []);
+    }, [monthIdx, categoryData, inputData]);
 
     return (
         <>
@@ -191,7 +183,16 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                     </div>
                     {/* Pie chart */}
                     <div className="flex">
-                        <ExpensesPieChart data={pieChartData} />
+                        { pieChartData && pieChartData.length > 0 ? (
+                                <ExpensesPieChart data={pieChartData} />
+                            ) :(
+                                <div className="flex flex-col items-center justify-center">
+                                    <RefreshCw className="w-8 h-8 mb-2 text-gray-400" />
+                                    <div className="flex items-center justify-center min-w-4md h-40 text-gray-400">Refresh page to load graph</div>
+                                </div>
+                                
+                            )
+                        }
                     </div>
                     
                 </div>
