@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'
 import { Download } from 'lucide-react';
 import axios from 'axios';
 import '../index.css'
 
 // JSX component imports
-import SummaryChart from '../assets/SummaryChart';
-import NetIncomeChart from '../assets/NetIncomeChart';
-import AvgWeeklyExpChart from '../assets/AvgWeeklyExpChart';
+import SummaryChart from '../assets/charts/SummaryChart';
+import NetIncomeChart from '../assets/charts/NetIncomeChart';
+import AvgWeeklyExpChart from '../assets/charts/AvgWeeklyExpChart';
 import TopExpensesList from '../assets/TopExpensesList';
 import ChartDropdown from '../assets/ChartDropdown';
 import Navbar from '../assets/navbar';
@@ -52,7 +51,6 @@ function Dashboard() {
     //     ]
     // }
     const [topExpenses, setTopExpenses] = useState({});
-    const [categoryData, setCategoryData] = useState([]);
     const [expByMonth, setExpByMonth] = useState({});
 
     const MAX_WEEKLY_INCOME = 5000
@@ -170,33 +168,11 @@ function Dashboard() {
             const monthExpData = await fetchExpensesByMonth()
             setExpByMonth(monthExpData);
             fetchTopExpenses();
-            await getPieChartData()
             
         } catch (err) {
             alert("Error uploading file");
         }
     };
-
-    const getPieChartData = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/cleaned_expenses`);
-            const categoryTotals = {};
-            response.data.forEach(record => {
-                if (record.Category && record.Amount > 0) {
-                    categoryTotals[record.Category] = (categoryTotals[record.Category] || 0) + record.Amount;
-                }
-            });
-    
-            const pieData = Object.entries(categoryTotals).map(([category, total]) => ({
-                name: category,
-                value: parseFloat(total.toFixed(2)),
-            }));
-
-            setCategoryData(pieData);
-        } catch {
-            alert("Error obtaining pie chart data");
-        }
-    }
 
     const handleDownload = async () => {
         if (!csvFile) return;
@@ -463,8 +439,8 @@ input[type=number]::-webkit-outer-spin-button {
                     <div className="max-h-[35rem] grid grid-cols-3 gap-4">
                         <div className={`col-span-2 rounded-lg p-4 border`}>
                             <h3 className="text-lg font-bold">Expenditure by Category</h3>
-                            {summary && Object.keys(summary).length > 0 && categoryData && categoryData.length > 0 && (
-                                <ExpByCategoryCard data={expByMonth} chartData={categoryData} />
+                            {summary && Object.keys(summary).length > 0 && (
+                                <ExpByCategoryCard data={expByMonth} isDarkMode={isDarkMode} />
                             )}
                         </div>
                         <div className={`col-span-1 rounded-lg p-4 border overflow-x-auto`}>

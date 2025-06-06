@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     ChevronLeft,
     ChevronRight,
@@ -6,9 +6,12 @@ import {
     ArrowUpRight,
     ArrowDownLeft
 } from "lucide-react";
+import axios from 'axios';
 
-import { categoryIcons } from "./categoryIcons";
+import { categoryIcons } from "./utils/categoryIcons";
+import ExpensesPieChart from "./ExpensesPieChart";
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 function getCategoryIcon(category) {
   if (!category) return { icon: MoreHorizontal, color: "text-gray-400" };
@@ -17,14 +20,14 @@ function getCategoryIcon(category) {
 }
 
 export default function ExpByCategoryCard({ data, isDarkMode }) {
-    // Sort months descending (latest first)
+    const [categoryData, setCategoryData] = useState({});
+    const [pieChartData, setPieChartData] = useState([]);
+    const [monthIdx, setMonthIdx] = useState(0); // Start at latest month
 
     // Only include months in the format "Month YYYY" (e.g., "May 2025")
     const months = Object.keys(data || {}).sort(
         (a, b) => new Date(b) - new Date(a)
     );
-
-    const [monthIdx, setMonthIdx] = useState(0); // Start at latest month
 
     const currentMonth = months[monthIdx];
     const prevMonth = months[monthIdx + 1];
@@ -42,6 +45,63 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
         ...Object.keys(prevSpendingCategories),
         ])
     );
+
+    const getPieChartData = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/cleaned_expenses`);
+            const monthCategoryTotals = {};
+            response.data.forEach(record => {
+                if (record.Category && record.Amount > 0 && record.Month) {
+                    // initialise month object if not yet made
+                    if (!monthCategoryTotals[record.Month]) {
+                        monthCategoryTotals[record.Month] = {};
+                    }
+
+                    monthCategoryTotals[record.Month][record.Category] =
+                    (monthCategoryTotals[record.Month][record.Category] || 0) + record.Amount;
+                }
+            });
+
+            Object.keys(monthCategoryTotals).forEach(month => {
+                Object.keys(monthCategoryTotals[month]).forEach(category => {
+                    monthCategoryTotals[month][category] = parseFloat(monthCategoryTotals[month][category].toFixed(2));
+                });
+            });
+            setCategoryData(monthCategoryTotals);
+        } catch {
+            alert("Error obtaining pie chart data");
+        }
+    };
+
+    useEffect(() => {
+        getPieChartData();
+    }, [])
+
+    useEffect(() => {
+        if (!categoryData || !months[monthIdx]) {
+            setPieChartData([]);
+            return;
+        }
+        const catTotals = categoryData[months[monthIdx]] || {};
+        const pieData = Object.entries(catTotals).map(([category, total]) => ({
+            name: category,
+            value: parseFloat(total.toFixed(2)),
+        }));
+        setPieChartData(pieData);
+    }, [monthIdx, categoryData]);
+
+    useEffect(() => {
+        if (!categoryData || !months[monthIdx]) {
+            setPieChartData([]);
+            return;
+        }
+        const catTotals = categoryData[months[monthIdx]] || {};
+        const pieData = Object.entries(catTotals).map(([category, total]) => ({
+            name: category,
+            value: parseFloat(total.toFixed(2)),
+        }));
+        setPieChartData(pieData);
+    }, []);
 
     return (
         <>
@@ -129,10 +189,11 @@ export default function ExpByCategoryCard({ data, isDarkMode }) {
                             })}
                         </div>
                     </div>
-                    <div className="flex">
-                        Pie Chart
-                    </div>
                     {/* Pie chart */}
+                    <div className="flex">
+                        <ExpensesPieChart data={pieChartData} />
+                    </div>
+                    
                 </div>
                 
                 

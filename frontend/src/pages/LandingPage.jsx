@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate  } from 'react-router-dom'; 
 
-import CsvDropZone from '../assets/CsvDropZone';
+import CsvDropZone from '../assets/utils/CsvDropZone';
 import Navbar from '../assets/navbar';
 import Footer from '../assets/footer';
 
